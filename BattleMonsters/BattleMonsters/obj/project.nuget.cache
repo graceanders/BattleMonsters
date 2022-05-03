@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uFYZxka65jQVBPGG5ov+zAgvpDtTUGdeWA7Bjn8npGUJsgTzxzX3b63YY9fZD+NHmkyapWbE+bLSiT05Vxyl6w==",
+  "dgSpecHash": "DDvMLaw4ihE0Eq9xJRg7m/heK/A/KGfCTEKhcGz1SRlYyRq2b17xLav8RbdCHLgUlfc7j7qWNIYW7N+m1IxKng==",
   "success": true,
-  "projectFilePath": "C:\\src\\C#\\BattleMonsters\\BattleMonsters\\BattleMonsters.csproj",
+  "projectFilePath": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\BattleMonsters\\BattleMonsters.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\grace\\.nuget\\packages\\libuv\\1.9.1\\libuv.1.9.1.nupkg.sha512",
     "C:\\Users\\grace\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\1.1.0\\microsoft.codeanalysis.analyzers.1.1.0.nupkg.sha512",

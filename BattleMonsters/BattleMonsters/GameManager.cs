@@ -430,6 +430,12 @@ namespace BattleMonsters
         //TODO Currently just giving the player a starter allow them to pick
         #region Pick Starter
 
+        /* Starter Guide
+              Starter 1 = Fire
+              Starter 2 = Water
+              Starter 3 = Earth
+             */
+
         public void PickStarter()
         {
             if (input.KeyboardState.IsKeyDown(Keys.D1))
@@ -454,9 +460,21 @@ namespace BattleMonsters
             GamePrintout.TxtPrintOut = $"You have chosen {CPM.Name} as your starter!";
 
             //Enemy is at a type disadvantage
-            if ( c == mm.FireStarter) { CEM = mm.EarthStarter; }
-            if (c == mm.WaterStarter) { CEM = mm.FireStarter; }
-            if (c == mm.EarthStarter) { CEM = mm.WaterStarter; }
+            if ( c == mm.FireStarter) 
+            { 
+                CEM = mm.EarthStarter;
+                Starter2.DrawColor = Color.Transparent;//If this is not here the unpicked stays visible
+            }
+            if (c == mm.WaterStarter) 
+            { 
+                CEM = mm.FireStarter;
+                Starter3.DrawColor = Color.Transparent;
+            }
+            if (c == mm.EarthStarter) 
+            { 
+                CEM = mm.WaterStarter;
+                Starter1.DrawColor = Color.Transparent;
+            }
 
             PickedStarter = true;
             PickStarterElement = Color.Transparent;

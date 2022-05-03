@@ -4,28 +4,28 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BigFont.spritefont</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BossFour.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BossOne.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BossThree.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BossTwo.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthBird.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthDragon.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthJelly.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthScorpion.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthStarter.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireBird.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireDragon.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireJelly.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireScorpion.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireStarter.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/Font.spritefont</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/MarsBackground.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterBird.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterDragon.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterJelly.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterScorpion.png</File>
-    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterStarter.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/BigFont.spritefont</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/BossFour.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/BossOne.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/BossThree.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/BossTwo.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/EarthBird.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/EarthDragon.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/EarthJelly.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/EarthScorpion.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/EarthStarter.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/FireBird.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/FireDragon.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/FireJelly.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/FireScorpion.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/FireStarter.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/Font.spritefont</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/MarsBackground.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/WaterBird.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/WaterDragon.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/WaterJelly.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/WaterScorpion.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/WaterStarter.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

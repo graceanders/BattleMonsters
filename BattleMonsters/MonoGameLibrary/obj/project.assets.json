@@ -7328,11 +7328,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\src\\C#\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj",
+      "projectUniqueName": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj",
       "projectName": "MonoGameLibrary",
-      "projectPath": "C:\\src\\C#\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj",
+      "projectPath": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj",
       "packagesPath": "C:\\Users\\grace\\.nuget\\packages\\",
-      "outputPath": "C:\\src\\C#\\BattleMonsters\\MonoGameLibrary\\obj\\",
+      "outputPath": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\MonoGameLibrary\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\grace\\AppData\\Roaming\\NuGet\\NuGet.Config",

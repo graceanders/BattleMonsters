@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7xUTQgA6YRIkK3s6deHo/tLFsQAuqJelh3xL0pICXrRAx0mHo0Wvy+lA/0WX3Uv7+wG5GxVRwSsucmdDMvNPTw==",
+  "dgSpecHash": "4I+JsvVrw0hAbKULivif+kMBxK8ZoXyjil27c2mjhpT/fu4Zb/Q/L39z2UB1D2jzMqq9gTYZ1bvSQoW4CywLpA==",
   "success": true,
-  "projectFilePath": "C:\\src\\C#\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj",
+  "projectFilePath": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\grace\\.nuget\\packages\\libuv\\1.9.1\\libuv.1.9.1.nupkg.sha512",
     "C:\\Users\\grace\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\1.1.0\\microsoft.codeanalysis.analyzers.1.1.0.nupkg.sha512",

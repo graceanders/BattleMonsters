@@ -7351,11 +7351,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\src\\C#\\BattleMonsters\\BattleMonsters\\BattleMonsters.csproj",
+      "projectUniqueName": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\BattleMonsters\\BattleMonsters.csproj",
       "projectName": "BattleMonsters",
-      "projectPath": "C:\\src\\C#\\BattleMonsters\\BattleMonsters\\BattleMonsters.csproj",
+      "projectPath": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\BattleMonsters\\BattleMonsters.csproj",
       "packagesPath": "C:\\Users\\grace\\.nuget\\packages\\",
-      "outputPath": "C:\\src\\C#\\BattleMonsters\\BattleMonsters\\obj\\",
+      "outputPath": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\BattleMonsters\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\grace\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -7372,8 +7372,8 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "C:\\src\\C#\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj": {
-              "projectPath": "C:\\src\\C#\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj"
+            "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj": {
+              "projectPath": "C:\\Users\\grace\\source\\repos\\BattleMonsters\\BattleMonsters\\MonoGameLibrary\\MonoGameLibrary.csproj"
             }
           }
         }

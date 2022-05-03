@@ -4,8 +4,8 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/src/C#/BattleMonsters/MonoGameLibrary/Content/Arial.spritefont</File>
-    <File>C:/src/C#/BattleMonsters/MonoGameLibrary/Content/SpriteMarker.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/MonoGameLibrary/Content/Arial.spritefont</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/MonoGameLibrary/Content/SpriteMarker.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
