@@ -44,7 +44,8 @@ namespace BattleMonsters
 
         //Text Draw Locations
         Vector2 P_TextLocation, PM_HPLocation, E_TextLocation, EM_HPLocation;
-        Vector2 RoundtxtLoc;
+        Vector2 RoundtxtLoc, TurnTxtLoc;
+
 
         SpriteFont font;
         SpriteFont bigfont;
@@ -128,10 +129,11 @@ namespace BattleMonsters
             #region Text Draw Set
             P_TextLocation = new Vector2(20, 20);
             PM_HPLocation = new Vector2(20, 80);
-            E_TextLocation = new Vector2(g.GraphicsDevice.Viewport.Width - 150, 20);
-            EM_HPLocation = new Vector2(g.GraphicsDevice.Viewport.Width - 150, 80);
+            E_TextLocation = new Vector2(g.GraphicsDevice.Viewport.Width - 250, 20);
+            EM_HPLocation = new Vector2(g.GraphicsDevice.Viewport.Width - 250, 80);
 
             RoundtxtLoc = new Vector2((g.GraphicsDevice.Viewport.Width / 2) - 50, 20);
+            TurnTxtLoc = new Vector2(RoundtxtLoc.X, (RoundtxtLoc.Y + 50));
             #endregion
 
             base.LoadContent();
@@ -409,15 +411,15 @@ namespace BattleMonsters
 
         public void PickStarter()
         {
-            if (input.KeyboardState.IsKeyDown(Keys.D1))
+            if (input.KeyboardState.WasKeyPressed(Keys.D1))
             {
                 ThisStarter(mm.FireStarter);
             }
-            if (input.KeyboardState.IsKeyDown(Keys.D2))
+            if (input.KeyboardState.WasKeyPressed(Keys.D2))
             {
                 ThisStarter(mm.WaterStarter);
             }
-            if (input.KeyboardState.IsKeyDown(Keys.D3))
+            if (input.KeyboardState.WasKeyPressed(Keys.D3))
             {
                 ThisStarter(mm.EarthStarter);
             }
@@ -472,7 +474,7 @@ namespace BattleMonsters
 
             if (GameMode == GameMode.OutBattle)
             {
-                if (input.KeyboardState.IsKeyDown(Keys.B))
+                if (input.KeyboardState.WasKeyPressed(Keys.B))
                 {
                     //Battle
                     GamePrintout.TxtPrintOut = $"Round {Round} shall commense!";
@@ -483,12 +485,12 @@ namespace BattleMonsters
                     }
                     GameMode = GameMode.MonsterSwap;
                 }
-                if (input.KeyboardState.IsKeyDown(Keys.H))
+                if (input.KeyboardState.WasKeyPressed(Keys.H))
                 {
                     GamePrintout.TxtPrintOut = "You have select to Heal your Monsters!";
                     GameMode = GameMode.Healing;
                 }
-                if (input.KeyboardState.IsKeyDown(Keys.T))
+                if (input.KeyboardState.WasKeyPressed(Keys.T))
                 {
                     //Manage team
                     GamePrintout.TxtPrintOut = "Lets manage your Team!";
@@ -518,12 +520,12 @@ namespace BattleMonsters
         {
             //Switches which monster the user is using at the moment
             //Probally create a bool value for is the player is attacking/ being attacked so they cant switch mid that
-            if (input.KeyboardState.IsKeyDown(Keys.D1))
+            if (input.KeyboardState.WasKeyPressed(Keys.D1))
             {
                 P.CurrentMonster = P.Team[0];
                 GamePrintout.TxtPrintOut = "You have Swapped to your 1st Monster!\nLock in to begin!";
             }
-            if (input.KeyboardState.IsKeyDown(Keys.D2))
+            if (input.KeyboardState.WasKeyPressed(Keys.D2))
             {
                 if (P.Team.Count == 1)//No 2nd Monster
                 {
@@ -535,7 +537,7 @@ namespace BattleMonsters
                     GamePrintout.TxtPrintOut = "You have Swapped to your 2st Monster!\nLock in to begin!";
                 }
             }
-            if (input.KeyboardState.IsKeyDown(Keys.D3))
+            if (input.KeyboardState.WasKeyPressed(Keys.D3))
             {
                 if (P.Team.Count < 3)//No 3rd
                 {
@@ -550,7 +552,7 @@ namespace BattleMonsters
                     GamePrintout.TxtPrintOut = "You have Swapped to your 3st Monster!\nLock in to begin!";
                 }
             }
-            if (input.KeyboardState.IsKeyDown(Keys.L))
+            if (input.KeyboardState.WasKeyPressed(Keys.L))
             {
                 GameMode = GameMode.InBattle;
                 GamePrintout.TxtPrintOut = $"You have selected {P.CurrentMonster.Name}\nThe Battle will commense!";
@@ -571,35 +573,35 @@ namespace BattleMonsters
 
             if (Heal1)
             {
-                if (input.KeyboardState.IsKeyDown(Keys.D1))
+                if (input.KeyboardState.WasKeyPressed(Keys.D1))
                 {
                     Heal(P.DeadMonsters[0]);
                 }
             }
             if (Heal2)
             {
-                if (input.KeyboardState.IsKeyDown(Keys.D2))
+                if (input.KeyboardState.WasKeyPressed(Keys.D2))
                 {
                     Heal(P.DeadMonsters[1]);
                 }
             }
             if (Heal3)
             {
-                if (input.KeyboardState.IsKeyDown(Keys.D3))
+                if (input.KeyboardState.WasKeyPressed(Keys.D3))
                 {
                     Heal(P.DeadMonsters[2]);
                 }
             }
             if (Heal4)
             {
-                if (input.KeyboardState.IsKeyDown(Keys.D4))
+                if (input.KeyboardState.WasKeyPressed(Keys.D4))
                 {
                     Heal(P.DeadMonsters[3]);
                 }
             }
             if (Heal5)
             {
-                if (input.KeyboardState.IsKeyDown(Keys.D5))
+                if (input.KeyboardState.WasKeyPressed(Keys.D5))
                 {
                     Heal(P.DeadMonsters[4]);
                 }
@@ -637,12 +639,17 @@ namespace BattleMonsters
             if(P.CurrentMonster != null)
             {
                 //Player
-                sb.DrawString(bigfont, "Player", P_TextLocation, BattleElement);
+                sb.DrawString(bigfont, $"Player: {P.Name}", P_TextLocation, BattleElement);
                 sb.DrawString(font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
 
                 //Enemy
-                sb.DrawString(bigfont, "Enemy", E_TextLocation, BattleElement);
+                sb.DrawString(bigfont, $"Enemy: {E.Name}", E_TextLocation, BattleElement);
                 sb.DrawString(font, $"{E.CurrentMonster.Name}'s HP: {E.CurrentMonster.HP}\n\nStats:\nATK Score: {E.CurrentMonster.ATKScore}\nDEF Score: {E.CurrentMonster.DEFScore}", EM_HPLocation, BattleElement);
+            }
+
+            if(CurrentBattle != null)
+            {
+                sb.DrawString(font, $"Turn: {CurrentBattle.Turn}", TurnTxtLoc, BattleElement);
             }
 
             #region Game Info Text Info
@@ -657,7 +664,7 @@ namespace BattleMonsters
             if(GameMode == GameMode.PickStarter) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, PickStarterElement); }
             if (GameMode == GameMode.OutBattle) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, OutOfBattleElement); }
             if (GameMode == GameMode.InBattle) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, BattleElement); }
-            if(GameMode == GameMode.MonsterSwap) { sb.DrawString(font, ButtonGuideTxt, new Vector2((ButtonGuidLoc.X + 200), (ButtonGuidLoc.Y)), BattleElement); }
+            if(GameMode == GameMode.MonsterSwap) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, BattleElement); }
             #endregion
 
             sb.End();

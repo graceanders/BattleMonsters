@@ -8,8 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BattleMonsters
 {
-    //ERROR: Attack is attacking more then once
-
     public enum BattleState { Playing, Won, Lost, Forfit }
     public class BattleManager : DrawableGameComponent
     {
@@ -23,6 +21,8 @@ namespace BattleMonsters
 
         Player P;
         Enemy E;
+
+        public int Turn;
 
         bool MoveMade = false;
 
@@ -57,6 +57,8 @@ namespace BattleMonsters
             game = G;
             this.P = P;
             this.E = E;
+
+            Turn = 1;
 
             this.BattleState = BattleState.Playing;
         }
@@ -138,6 +140,7 @@ namespace BattleMonsters
                 }
 
                 if (BattleState == BattleState.Playing) { EnemyRound(); }
+                Turn++;
             }
 
         }
