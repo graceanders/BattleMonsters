@@ -222,7 +222,6 @@ namespace BattleMonsters
         }
         #endregion
 
-        bool AddMonstersToTeam = false;
         public void WhichBattle()
         {
             if (Round == 1)

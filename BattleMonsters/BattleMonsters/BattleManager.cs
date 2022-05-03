@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BattleMonsters
 {
+    //ERROR: Attack is attacking more then once
+
     public enum BattleState { Playing, Won, Lost, Forfit }
     public class BattleManager : DrawableGameComponent
     {
@@ -21,6 +23,8 @@ namespace BattleMonsters
 
         Player P;
         Enemy E;
+
+        bool MoveMade = false;
 
 
         //When player or enemy selects there monster it will be set to this
@@ -115,6 +119,7 @@ namespace BattleMonsters
         bool RoundCompleted = false;
         public void Round(bool Attack)
         {
+            MoveMade = true;
             if (!RoundCompleted)
             {
                 BattleState = BattleState.Playing;
@@ -141,7 +146,7 @@ namespace BattleMonsters
         {
             if (P.CurrentMonster.ATKScore > E.CurrentMonster.HP)//if the enemy will lose on the next round
             {
-                GamePrintout.TxtPrintOut += $"The Enemy is attempting to Run!";
+                GamePrintout.TxtPrintOut += $"\nThe Enemy is attempting to Run!";
                 //Attempt run
                 Run(E);
             }
@@ -247,26 +252,19 @@ namespace BattleMonsters
 
         }
 
-        bool PlayerDecision = false;
+        bool Attacked;
         public void InBattleInput()
         {
-            if (input.KeyboardState.IsKeyDown(Keys.A))
+            if (!MoveMade)
             {
-                if (!PlayerDecision)
+                if (input.KeyboardState.WasKeyPressed(Keys.A))
                 {
-                    this.Round(true);
+                    this.Round(true);//Attack
                 }
-                PlayerDecision = true;
-                //Attack
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.R))
-            {
-                if (!PlayerDecision)
+                if (input.KeyboardState.WasKeyPressed(Keys.R))
                 {
-                    this.Round(false);
+                    this.Round(false);//Run
                 }
-                PlayerDecision = true;
-                //Retreat
             }
         }
 
