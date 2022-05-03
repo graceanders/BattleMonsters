@@ -227,8 +227,6 @@ namespace BattleMonsters
         {
             if (Round == 1)
             {
-                AddMonstersToTeams();
-
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 2)
@@ -259,15 +257,6 @@ namespace BattleMonsters
             //is the game won id round = 7?
         }
 
-        void AddMonstersToTeams()
-        {
-            if (!AddMonstersToTeam)
-            {
-                P.AddMonsterToTeam(P.CurrentMonster);
-                E.AddMonsterToTeam(E.CurrentMonster);
-            }
-            AddMonstersToTeam = true;
-        }
 
         //TODO Should be in Battle Manager
         public void CheckBattleState()
@@ -488,6 +477,11 @@ namespace BattleMonsters
                 {
                     //Battle
                     GamePrintout.TxtPrintOut = $"Round {Round} shall commense!";
+                    if(P.Team.Count == 0)
+                    {
+                        P.Team.Add(P.CurrentMonster);
+                        E.Team.Add(E.CurrentMonster);
+                    }
                     GameMode = GameMode.MonsterSwap;
                 }
                 if (input.KeyboardState.IsKeyDown(Keys.H))
@@ -505,7 +499,7 @@ namespace BattleMonsters
             }
             if (GameMode == GameMode.InBattle)
             {
-                InBattleInput();
+                CurrentBattle.InBattleInput();
             }
             if(GameMode == GameMode.MonsterSwap)
             {
@@ -519,19 +513,7 @@ namespace BattleMonsters
 
 
         //TODO: Move to InBattle and MonsterSwap t0 Battle Manager
-        void InBattleInput()
-        {
-            if (input.KeyboardState.IsKeyDown(Keys.A))
-            {
-                CurrentBattle.Round(true);
-                //Attack
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.R))
-            {
-                CurrentBattle.Round(false);
-                //Retreat
-            }
-        }
+        
 
         void MonsterSwapInput()
         {
@@ -544,7 +526,7 @@ namespace BattleMonsters
             }
             if (input.KeyboardState.IsKeyDown(Keys.D2))
             {
-                if (P.Team[1] == null)//No 2nd Monster
+                if (P.Team.Count == 1)//No 2nd Monster
                 {
                     GamePrintout.TxtPrintOut = "You only have 1 Monster in your team and cannot swap\nLock in to begin!";
                 }
@@ -556,9 +538,9 @@ namespace BattleMonsters
             }
             if (input.KeyboardState.IsKeyDown(Keys.D3))
             {
-                if (P.Team[2] == null)//No 3rd
+                if (P.Team.Count < 3)//No 3rd
                 {
-                    if (P.Team[1] == null)
+                    if (P.Team.Count == 1)
                         GamePrintout.TxtPrintOut = "You only have 1 Monster in your Team and cannot Swap\nLock in to begin!";
                     else
                         GamePrintout.TxtPrintOut = "You only have 2 Monster in your Team and cannot Swap to your 3rd\nTry Swaping to the 1st or 2nd Monster";

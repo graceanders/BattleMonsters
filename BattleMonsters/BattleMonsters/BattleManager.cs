@@ -48,6 +48,8 @@ namespace BattleMonsters
 
         public BattleManager(Game G, Player P, Enemy E) : base(G)
         {
+            input = (InputHandler)G.Services.GetService(typeof(IInputHandler));
+
             game = G;
             this.P = P;
             this.E = E;
@@ -62,7 +64,6 @@ namespace BattleMonsters
 
         public override void Initialize()
         {
-            PlayerTurn = true;
             PlayerSwaped = false;
             base.Initialize();
         }
@@ -73,20 +74,18 @@ namespace BattleMonsters
         }
 
         double Damage;
-        bool HasDamaged;
+        bool PlayerHasDamaged = false;
+        bool EnemyHasDamaged = false;
         public void PlayerRound()
         {
-            HasDamaged = false;
             Damage = P.CurrentMonster.Attack(P.CurrentMonster.ATKScore, E.CurrentMonster.DEFScore);
 
             DamageMonster(E.CurrentMonster, (int)Damage); ;
             GamePrintout.TxtPrintOut += $"\n{P.CurrentMonster.Name} Damaged {E.CurrentMonster.Name} for {(int)Damage} HP points\n{E.CurrentMonster.Name}'s HP is now at {E.CurrentMonster.HP}";
-            PlayerTurn = false;
         }
 
         public void EnemyRound()
         {
-            HasDamaged = false;
             CheckProbablilityOfLoss();
             //OptomizeEnemySwap(); //Potentially build out
             if(BattleState == BattleState.Playing)
@@ -95,40 +94,46 @@ namespace BattleMonsters
                 DamageMonster(P.CurrentMonster, (int)Damage);
                 GamePrintout.TxtPrintOut += $"\n{E.CurrentMonster.Name} Damaged {P.CurrentMonster.Name} for {(int)Damage} HP points\n{P.CurrentMonster.Name}'s HP is now at {P.CurrentMonster.HP}";
             }
-            
-            //Report Damage
-            PlayerTurn = true;
-
+            RoundCompleted = true;
+            GamePrintout.TxtPrintOut += "\nRound Completed";
         }
 
         void DamageMonster(Creature WhichMonster, int Damage)
         {
-            if(HasDamaged == false)
+            if(WhichMonster == E.CurrentMonster)//Player Attacking
             {
-                WhichMonster.HP -= Damage;
+                if (!PlayerHasDamaged) { WhichMonster.HP -= Damage; }
+                PlayerHasDamaged = true;
             }
-            HasDamaged = true;
+            if(WhichMonster == P.CurrentMonster)//Enemy Attacking
+            {
+                if (!EnemyHasDamaged) { WhichMonster.HP -= Damage; }
+                EnemyHasDamaged = true;
+            }
         }
 
+        bool RoundCompleted = false;
         public void Round(bool Attack)
         {
-            BattleState = BattleState.Playing;
-
-            CheckLife();
-
-            if (Attack)//If the player desides to attack
+            if (!RoundCompleted)
             {
-                GamePrintout.TxtPrintOut = "You have decided to Attack!";
-                PlayerRound();
-            }
-            else
-            {
-                GamePrintout.TxtPrintOut = "You have decided to Run!";
-                Run(P);
-            }
+                BattleState = BattleState.Playing;
 
-            if(BattleState == BattleState.Playing) { EnemyRound(); }
-           
+                CheckLife();
+
+                if (Attack)//If the player desides to attack
+                {
+                    GamePrintout.TxtPrintOut = "You have decided to Attack!";
+                    PlayerRound();
+                }
+                else
+                {
+                    GamePrintout.TxtPrintOut = "You have decided to Run!";
+                    Run(P);
+                }
+
+                if (BattleState == BattleState.Playing) { EnemyRound(); }
+            }
 
         }
 
@@ -136,7 +141,7 @@ namespace BattleMonsters
         {
             if (P.CurrentMonster.ATKScore > E.CurrentMonster.HP)//if the enemy will lose on the next round
             {
-                GamePrintout.TxtPrintOut = $"The Enemy is attempting to Run!";
+                GamePrintout.TxtPrintOut += $"The Enemy is attempting to Run!";
                 //Attempt run
                 Run(E);
             }
@@ -154,16 +159,16 @@ namespace BattleMonsters
         public void Run(Character WhichCharacter)
         {
             RunSucessRate = RunAttempt.Next(100);
-            if (RunSucessRate > 60)
+            if (RunSucessRate < 60)
             {
                 RunSucess(WhichCharacter);
             }
-            GamePrintout.TxtPrintOut += $"\nThe {nameof(WhichCharacter)} was unsucesfull in their Run attempt";
+            GamePrintout.TxtPrintOut += $"\nThe {WhichCharacter.Name} was unsucesfull in their Run attempt";
         }
 
         public bool RunSucess(Character WhichCharacter)
         {
-            GamePrintout.TxtPrintOut += $"\nThe {nameof(WhichCharacter)} sucessfully Ran";
+            GamePrintout.TxtPrintOut += $"\nThe {WhichCharacter.Name} sucessfully Ran";
             BattleState = BattleState.Forfit;
             if (WhichCharacter == E)
             {
@@ -241,7 +246,29 @@ namespace BattleMonsters
             }
 
         }
-    
+
+        bool PlayerDecision = false;
+        public void InBattleInput()
+        {
+            if (input.KeyboardState.IsKeyDown(Keys.A))
+            {
+                if (!PlayerDecision)
+                {
+                    this.Round(true);
+                }
+                PlayerDecision = true;
+                //Attack
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.R))
+            {
+                if (!PlayerDecision)
+                {
+                    this.Round(false);
+                }
+                PlayerDecision = true;
+                //Retreat
+            }
+        }
 
     }
 }
