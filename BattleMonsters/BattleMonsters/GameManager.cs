@@ -38,7 +38,7 @@ namespace BattleMonsters
 
         public Player P;
         public Enemy E;
-        public Creature CPM, CEM;
+        //public Creature CPM, CEM;
 
         public Vector2 PMLocation, EMLocation;
 
@@ -141,20 +141,6 @@ namespace BattleMonsters
         int CalculateHeightMargine(Creature C) { return (C.spriteTexture.Height / 2); }
         int CalculateWidthMargine(Creature C) { return (C.spriteTexture.Width / 2); }
 
-        void Round1SetUp()
-        {
-            CPM.GetStats(Round);
-            P.AddMonsterToTeam(CPM);
-
-            CEM.GetStats(Round);
-            E.AddMonsterToTeam(CEM);
-
-            g.Components.Add(CPM);
-            g.Components.Add(CEM);
-
-            CurrentBattle = new BattleManager(g, P, E);
-        }
-
         public override void Update(GameTime gameTime)
         {
             CheckGameMode();
@@ -236,54 +222,51 @@ namespace BattleMonsters
         }
         #endregion
 
+        bool AddMonstersToTeam = false;
         public void WhichBattle()
         {
             if (Round == 1)
             {
-                Round1SetUp();
+                AddMonstersToTeams();
+
+                CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 2)
             {
                 //Set up other necesarry values
                 CurrentBattle = new BattleManager(this.Game, this.P, this.E);
-                SetCurrentonsters(CurrentBattle);
-                GameMode = GameMode.MonsterSwap;
             }
             if (Round == 3)
             {
                 //Set up other necesarry values
                 CurrentBattle = new BattleManager(this.Game, this.P, this.E);
-                SetCurrentonsters(CurrentBattle);
-                GameMode = GameMode.MonsterSwap;
             }
             if (Round == 4)
             {
                 //Set up other necesarry values
                 CurrentBattle = new BattleManager(this.Game, this.P, this.E);
-                SetCurrentonsters(CurrentBattle);
-                GameMode = GameMode.MonsterSwap;
             }
             if (Round == 5)
             {
                 //Set up other necesarry values
                 CurrentBattle = new BattleManager(this.Game, this.P, this.E);
-                SetCurrentonsters(CurrentBattle);
-                GameMode = GameMode.MonsterSwap;
             }
             if (Round == 6)
             {
                 //Set up other necesarry values
                 CurrentBattle = new BattleManager(this.Game, this.P, this.E);
-                SetCurrentonsters(CurrentBattle);
-                GameMode = GameMode.MonsterSwap;
             }
             //is the game won id round = 7?
         }
 
-        void SetCurrentonsters (BattleManager bm)
+        void AddMonstersToTeams()
         {
-            CPM = bm.CPM;
-            CEM = bm.CEM;
+            if (!AddMonstersToTeam)
+            {
+                P.AddMonsterToTeam(P.CurrentMonster);
+                E.AddMonsterToTeam(E.CurrentMonster);
+            }
+            AddMonstersToTeam = true;
         }
 
         //TODO Should be in Battle Manager
@@ -454,25 +437,23 @@ namespace BattleMonsters
 
         void ThisStarter(Creature c)
         {
-            P.Team.Add(c);
-            P.AddMonsterToTeam(c);
-            CPM = c;
-            GamePrintout.TxtPrintOut = $"You have chosen {CPM.Name} as your starter!";
+            P.CurrentMonster = c;
+            GamePrintout.TxtPrintOut = $"You have chosen {P.CurrentMonster.Name} as your starter!";
 
             //Enemy is at a type disadvantage
             if ( c == mm.FireStarter) 
-            { 
-                CEM = mm.EarthStarter;
+            {
+                E.CurrentMonster = mm.EarthStarter;
                 Starter2.DrawColor = Color.Transparent;//If this is not here the unpicked stays visible
             }
             if (c == mm.WaterStarter) 
-            { 
-                CEM = mm.FireStarter;
+            {
+                E.CurrentMonster = mm.FireStarter;
                 Starter3.DrawColor = Color.Transparent;
             }
             if (c == mm.EarthStarter) 
-            { 
-                CEM = mm.WaterStarter;
+            {
+                E.CurrentMonster = mm.WaterStarter;
                 Starter1.DrawColor = Color.Transparent;
             }
 
@@ -484,10 +465,14 @@ namespace BattleMonsters
 
         void BattleReady()
         {
-            CPM.Location = PMLocation;
-            CPM.DrawColor = BattleElement;
-            CEM.Location = EMLocation;
-            CEM.DrawColor = BattleElement;
+            P.CurrentMonster.Location = PMLocation;
+            P.CurrentMonster.DrawColor = BattleElement;
+            P.CurrentMonster.GetStats(Round);
+
+            E.CurrentMonster.Location = EMLocation;
+            E.CurrentMonster.DrawColor = BattleElement;
+            E.CurrentMonster.GetStats(Round);
+
         }
         #endregion
 
@@ -554,7 +539,7 @@ namespace BattleMonsters
             //Probally create a bool value for is the player is attacking/ being attacked so they cant switch mid that
             if (input.KeyboardState.IsKeyDown(Keys.D1))
             {
-                CPM = P.Team[0];
+                P.CurrentMonster = P.Team[0];
                 GamePrintout.TxtPrintOut = "You have Swapped to your 1st Monster!\nLock in to begin!";
             }
             if (input.KeyboardState.IsKeyDown(Keys.D2))
@@ -565,7 +550,7 @@ namespace BattleMonsters
                 }
                 else
                 {
-                    CPM = P.Team[1];
+                    P.CurrentMonster = P.Team[1];
                     GamePrintout.TxtPrintOut = "You have Swapped to your 2st Monster!\nLock in to begin!";
                 }
             }
@@ -580,14 +565,14 @@ namespace BattleMonsters
                 }
                 else
                 {
-                    CPM = P.Team[2];
+                    P.CurrentMonster = P.Team[2];
                     GamePrintout.TxtPrintOut = "You have Swapped to your 3st Monster!\nLock in to begin!";
                 }
             }
             if (input.KeyboardState.IsKeyDown(Keys.L))
             {
                 GameMode = GameMode.InBattle;
-                GamePrintout.TxtPrintOut = $"You have selected {CPM.Name}\nThe Battle will commense!";
+                GamePrintout.TxtPrintOut = $"You have selected {P.CurrentMonster.Name}\nThe Battle will commense!";
             }
         }
         //------------------------
@@ -668,15 +653,15 @@ namespace BattleMonsters
 
             sb.DrawString(bigfont, $"Round: {Round}", RoundtxtLoc, AlwaysShow);
 
-            if(CPM != null)
+            if(P.CurrentMonster != null)
             {
                 //Player
                 sb.DrawString(bigfont, "Player", P_TextLocation, BattleElement);
-                sb.DrawString(font, $"{CPM.Name}'s HP: {CPM.HP}\n\nStats:\nATK Score: {CPM.ATKScore}\nDEF Score: {CPM.DEFScore}", PM_HPLocation, BattleElement);
+                sb.DrawString(font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
 
                 //Enemy
                 sb.DrawString(bigfont, "Enemy", E_TextLocation, BattleElement);
-                sb.DrawString(font, $"{CEM.Name}'s HP: {CEM.HP}\n\nStats:\nATK Score: {CEM.ATKScore}\nDEF Score: {CEM.DEFScore}", EM_HPLocation, BattleElement);
+                sb.DrawString(font, $"{E.CurrentMonster.Name}'s HP: {E.CurrentMonster.HP}\n\nStats:\nATK Score: {E.CurrentMonster.ATKScore}\nDEF Score: {E.CurrentMonster.DEFScore}", EM_HPLocation, BattleElement);
             }
 
             #region Game Info Text Info

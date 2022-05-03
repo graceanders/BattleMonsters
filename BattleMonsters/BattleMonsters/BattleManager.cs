@@ -19,13 +19,13 @@ namespace BattleMonsters
 
         public GameMode GameMode { get; }
 
-        Player player;
-        Enemy enemy;
+        Player P;
+        Enemy E;
 
 
         //When player or enemy selects there monster it will be set to this
-        public Creature CPM; //Current Player Monster
-        public Creature CEM; //Current Enemy Monster
+        //public Creature CPM; //Current Player Monster
+        //public Creature CEM; //Current Enemy Monster
 
 
         //Randoms:
@@ -41,8 +41,6 @@ namespace BattleMonsters
 
         int margin = 10;
 
-
-        SpriteBatch sb;
         //Allow the enemy AI to check CPM's type and try to swith to a monster that beats it?
 
         //this would requre a new Battle Manager to be created for every new enemy
@@ -51,19 +49,8 @@ namespace BattleMonsters
         public BattleManager(Game G, Player P, Enemy E) : base(G)
         {
             game = G;
-            player = P;
-            enemy = E;
-
-            //input = (InputHandler)G.Services.GetService(typeof(IInputHandler));
-
-            ////Player
-            //CPM = player.Team[0];
-            //G.Components.Add(CPM);
-
-            ////Enemy
-            //CEM = enemy.Team[0];
-            //G.Components.Add(CEM);
-
+            this.P = P;
+            this.E = E;
 
             this.BattleState = BattleState.Playing;
         }
@@ -82,29 +69,45 @@ namespace BattleMonsters
 
         public override void Update(GameTime gametime)
         {
-
             base.Update(gametime);
         }
 
+        double Damage;
+        bool HasDamaged;
         public void PlayerRound()
         {
-            CPM.Attack(CPM.ATKScore, CEM.DEFScore);
-            //Report damage
+            HasDamaged = false;
+            Damage = P.CurrentMonster.Attack(P.CurrentMonster.ATKScore, E.CurrentMonster.DEFScore);
+
+            DamageMonster(E.CurrentMonster, (int)Damage); ;
+            GamePrintout.TxtPrintOut += $"\n{P.CurrentMonster.Name} Damaged {E.CurrentMonster.Name} for {(int)Damage} HP points\n{E.CurrentMonster.Name}'s HP is now at {E.CurrentMonster.HP}";
             PlayerTurn = false;
         }
 
         public void EnemyRound()
         {
+            HasDamaged = false;
             CheckProbablilityOfLoss();
             //OptomizeEnemySwap(); //Potentially build out
             if(BattleState == BattleState.Playing)
             {
-                CEM.Attack(CEM.ATKScore, CPM.DEFScore);
+                Damage = E.CurrentMonster.Attack(E.CurrentMonster.ATKScore, P.CurrentMonster.DEFScore);
+                DamageMonster(P.CurrentMonster, (int)Damage);
+                GamePrintout.TxtPrintOut += $"\n{E.CurrentMonster.Name} Damaged {P.CurrentMonster.Name} for {(int)Damage} HP points\n{P.CurrentMonster.Name}'s HP is now at {P.CurrentMonster.HP}";
             }
             
             //Report Damage
             PlayerTurn = true;
 
+        }
+
+        void DamageMonster(Creature WhichMonster, int Damage)
+        {
+            if(HasDamaged == false)
+            {
+                WhichMonster.HP -= Damage;
+            }
+            HasDamaged = true;
         }
 
         public void Round(bool Attack)
@@ -115,11 +118,13 @@ namespace BattleMonsters
 
             if (Attack)//If the player desides to attack
             {
+                GamePrintout.TxtPrintOut = "You have decided to Attack!";
                 PlayerRound();
             }
             else
             {
-                Run(player);
+                GamePrintout.TxtPrintOut = "You have decided to Run!";
+                Run(P);
             }
 
             if(BattleState == BattleState.Playing) { EnemyRound(); }
@@ -129,10 +134,11 @@ namespace BattleMonsters
 
         public void CheckProbablilityOfLoss()
         {
-            if (CPM.ATKScore > CEM.HP)//if the enemy will lose on the next round
+            if (P.CurrentMonster.ATKScore > E.CurrentMonster.HP)//if the enemy will lose on the next round
             {
+                GamePrintout.TxtPrintOut = $"The Enemy is attempting to Run!";
                 //Attempt run
-                Run(enemy);
+                Run(E);
             }
         }
 
@@ -152,20 +158,20 @@ namespace BattleMonsters
             {
                 RunSucess(WhichCharacter);
             }
-            //Inform on some outup of unsucessfull run attempt
+            GamePrintout.TxtPrintOut += $"\nThe {nameof(WhichCharacter)} was unsucesfull in their Run attempt";
         }
 
         public bool RunSucess(Character WhichCharacter)
         {
-            //Inform on some outup of sucessfull run
+            GamePrintout.TxtPrintOut += $"\nThe {nameof(WhichCharacter)} sucessfully Ran";
             BattleState = BattleState.Forfit;
-            if (WhichCharacter == enemy)
+            if (WhichCharacter == E)
             {
                 BattleState = BattleState.Forfit;
                 PlayerDid = false;
                 
             }
-            if (WhichCharacter == player)
+            if (WhichCharacter == P)
             {
                 BattleState = BattleState.Forfit;
                 PlayerDid = true;
@@ -176,8 +182,8 @@ namespace BattleMonsters
         int PlayerCombinedHP, EnemyCombinedHP;
         public void CheckLife()
         {
-            PlayerCombinedHP = player.CalculateTeamHP();
-            EnemyCombinedHP = enemy.CalculateTeamHP();
+            PlayerCombinedHP = P.CalculateTeamHP();
+            EnemyCombinedHP = E.CalculateTeamHP();
 
             if (PlayerCombinedHP <= 0)
             {
@@ -191,11 +197,11 @@ namespace BattleMonsters
 
         public void Lost(Character WhichCharacter)
         {
-            if (WhichCharacter == enemy)
+            if (WhichCharacter == E)
             {
                 //Enemy lost next battle would be opened in the game
             }
-            if (WhichCharacter == player)
+            if (WhichCharacter == P)
             {
                 //Player lost next battle would not be open
             }
@@ -206,15 +212,15 @@ namespace BattleMonsters
             //depends on difficulty
             if (GameDifficulty == GameDifficulty.Easy)
             {
-                player.Coins -= (player.Coins / 3); //Looses a 1/3
+                P.Coins -= (P.Coins / 3); //Looses a 1/3
             }
             if (GameDifficulty == GameDifficulty.Medium)
             {
-                player.Coins -= ((player.Coins / 3) * 2); //Looses 2/3
+                P.Coins -= ((P.Coins / 3) * 2); //Looses 2/3
             }
             if (GameDifficulty == GameDifficulty.Hard) //Looses all
             {
-                player.Coins -= player.Coins;
+                P.Coins -= P.Coins;
             }
         }
 
@@ -223,53 +229,17 @@ namespace BattleMonsters
             //depends on difficulty
             if (GameDifficulty == GameDifficulty.Easy)
             {
-                player.Coins += (enemy.Coins / 3); // Gains a 1/3 of the Enemies coins
+                P.Coins += (E.Coins / 3); // Gains a 1/3 of the Enemies coins
             }
             if (GameDifficulty == GameDifficulty.Medium)
             {
-                player.Coins += ((enemy.Coins / 3) * 2); //Gains 2/3 of the Enemies coins
+                P.Coins += ((E.Coins / 3) * 2); //Gains 2/3 of the Enemies coins
             }
             if (GameDifficulty == GameDifficulty.Hard)
             {
-                player.Coins += enemy.Coins; // Gains all of Enemies Coins
+                P.Coins += E.Coins; // Gains all of Enemies Coins
             }
 
-        }
-
-        public void MonsterSwap()
-        {
-            if (player.Team.Count == 1)
-            {
-                //They can't swap, they have no monster to swap with
-                PlayerSwaped = true;
-            }
-            else if (player.Team.Count == 2)
-            {
-                if (input.KeyboardState.IsKeyDown(Keys.D1))
-                {
-                    CPM = player.Team[0];
-                }
-                if (input.KeyboardState.IsKeyDown(Keys.D2))
-                {
-                    CPM = player.Team[1];
-                }
-            }
-            else
-            {
-                if (input.KeyboardState.IsKeyDown(Keys.D1))
-                {
-                    CPM = player.Team[0];
-                }
-                if (input.KeyboardState.IsKeyDown(Keys.D2))
-                {
-                    CPM = player.Team[1];
-                }
-                if (input.KeyboardState.IsKeyDown(Keys.D3))
-                {
-                    CPM = player.Team[2];
-                }
-
-            }
         }
     
 

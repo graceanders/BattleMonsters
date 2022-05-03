@@ -12,7 +12,7 @@ namespace BattleMonsters
     public class Creature : DrawableSprite, IAttack, IDefend
     {
         public string Name { get; set; }
-        public int HP { get; protected set; }
+        public int HP { get; set; }
         public int ATKScore { get; set; }
         public int DEFScore { get; set; }
 

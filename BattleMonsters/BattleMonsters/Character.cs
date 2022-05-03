@@ -16,6 +16,9 @@ namespace BattleMonsters
         public int TeamHP;
 
         int Calculated;
+
+        public Creature CurrentMonster;
+
         public int CalculateCombindedATK()
         {
             foreach (Creature monster in Team)
