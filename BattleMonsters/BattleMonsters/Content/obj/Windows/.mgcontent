@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/MarsBackground.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/MarsBackground.jpg</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BigFont.spritefont</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/Font.spritefont</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/PixelFont.spritefont</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/8514oem.spritefont</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BossFour.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BossOne.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BossThree.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BossTwo.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthBird.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthDragon.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthJelly.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthScorpion.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthStarter.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireBird.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireDragon.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireJelly.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireScorpion.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/FireStarter.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterBird.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterDragon.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterJelly.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterScorpion.png</File>
+    <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterStarter.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

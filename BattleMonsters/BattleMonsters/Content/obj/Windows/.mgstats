@@ -1,0 +1,26 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/8514oem.spritefont","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/8514oem.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21521,0.250331
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/BigFont.spritefont","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/BigFont.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21521,0.2423508
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/BossFour.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/BossFour.xnb","TextureProcessor","Texture2DContent",186010,1440085,0.755186
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/BossOne.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/BossOne.xnb","TextureProcessor","Texture2DContent",441767,3072085,0.1619827
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/BossThree.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/BossThree.xnb","TextureProcessor","Texture2DContent",535423,3072085,0.1751354
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/BossTwo.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/BossTwo.xnb","TextureProcessor","Texture2DContent",567940,3072085,0.2022437
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthBird.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/EarthBird.xnb","TextureProcessor","Texture2DContent",119447,921685,0.0584638
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthDragon.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/EarthDragon.xnb","TextureProcessor","Texture2DContent",167991,1440085,0.0833344
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthJelly.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/EarthJelly.xnb","TextureProcessor","Texture2DContent",37729,921685,0.0509033
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthScorpion.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/EarthScorpion.xnb","TextureProcessor","Texture2DContent",93325,921685,0.0764783
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/EarthStarter.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/EarthStarter.xnb","TextureProcessor","Texture2DContent",45553,921685,0.0475616
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/FireBird.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/FireBird.xnb","TextureProcessor","Texture2DContent",133326,921685,0.0800928
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/FireDragon.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/FireDragon.xnb","TextureProcessor","Texture2DContent",159454,1440085,0.064825
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/FireJelly.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/FireJelly.xnb","TextureProcessor","Texture2DContent",34775,921685,0.0330486
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/FireScorpion.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/FireScorpion.xnb","TextureProcessor","Texture2DContent",109604,921685,0.0452899
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/FireStarter.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/FireStarter.xnb","TextureProcessor","Texture2DContent",43931,921685,0.02593
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/Font.spritefont","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21521,0.2353721
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/MarsBackground.jpg","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/MarsBackground.xnb","TextureProcessor","Texture2DContent",2284541,72000085,1.854949
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/MarsBackground.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/MarsBackground.xnb","TextureProcessor","Texture2DContent",121836,4147285,0.2813107
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/PixelFont.spritefont","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/PixelFont.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21521,0.2303838
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterBird.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/WaterBird.xnb","TextureProcessor","Texture2DContent",144248,921685,0.0479612
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterDragon.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/WaterDragon.xnb","TextureProcessor","Texture2DContent",173506,1440085,0.050052
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterJelly.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/WaterJelly.xnb","TextureProcessor","Texture2DContent",35950,921685,0.0373988
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterScorpion.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/WaterScorpion.xnb","TextureProcessor","Texture2DContent",115180,921685,0.0320273
+"C:/src/C#/BattleMonsters/BattleMonsters/Content/WaterStarter.png","C:/src/C#/BattleMonsters/BattleMonsters/Content/bin/Windows/WaterStarter.xnb","TextureProcessor","Texture2DContent",46565,921685,0.059878
