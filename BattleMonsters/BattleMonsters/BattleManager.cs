@@ -22,6 +22,8 @@ namespace BattleMonsters
         Player P;
         Enemy E;
 
+        Vector2 CPMLocation, CEMLocation;
+
         public int Turn;
 
         bool MoveMade = false;
@@ -40,9 +42,6 @@ namespace BattleMonsters
 
         bool PlayerDid;
 
-        Vector2 CPMLocation;
-        Vector2 CEMLocation;
-
         int margin = 10;
 
         //Allow the enemy AI to check CPM's type and try to swith to a monster that beats it?
@@ -59,6 +58,12 @@ namespace BattleMonsters
             this.E = E;
 
             Turn = 1;
+
+            //Player
+            P.CurrentMonster = P.Team[0];
+
+            //Enemy
+            E.CurrentMonster = E.Team[0];
 
             this.BattleState = BattleState.Playing;
         }

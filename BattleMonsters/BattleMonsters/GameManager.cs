@@ -64,7 +64,7 @@ namespace BattleMonsters
 
         Random random;
 
-        bool PickedStarter;
+        //bool PickedStarter;
 
         public GameManager(Game game) : base(game)
         {
@@ -83,7 +83,8 @@ namespace BattleMonsters
             P = new Player();
             E = new Enemy();
 
-            mm = new MonsterManager(game);
+
+            mm = new MonsterManager(game, P, E);
             hm = new HealManager(game, P);
             game.Components.Add(mm);
             game.Components.Add(hm);
@@ -95,6 +96,7 @@ namespace BattleMonsters
         //TODO: Move Starter values and responsobilites to MonsterManager
         //TODO: Vecor Values should be bassed off of screen width and height
         Creature Starter1, Starter2, Starter3;
+        Texture2D Starter1Texture, Starter2Texture, Starter3Texture;
         protected override void LoadContent()
         {
             sb = new SpriteBatch(this.Game.GraphicsDevice);
@@ -110,28 +112,24 @@ namespace BattleMonsters
             Starter1 = mm.FireStarter;
             Starter1.DrawColor = PickStarterElement;
             Starter1.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 3) - (Starter1.spriteTexture.Width / 2)), 550);
+            Starter1Texture = Starter1.spriteTexture;
 
             Starter2 = mm.WaterStarter;
             Starter2.DrawColor = PickStarterElement;
             Starter2.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 2) - (Starter2.spriteTexture.Width / 2)), 550);
+            Starter2Texture = Starter2.spriteTexture;
 
             Starter3 = mm.EarthStarter;
             Starter3.DrawColor = PickStarterElement;
             Starter3.Location = new Vector2(1040, 550);
+            Starter3Texture = Starter3.spriteTexture;
 
-
-            //TODO: Dont have these by componenets, just draw out 3 images of the starters
-            //^ this is necessary so that CurrentMonster can be Components which need to be
-            g.Components.Add(Starter1);
-            g.Components.Add(Starter2);
-            g.Components.Add(Starter3);
 
             PMLocation = new Vector2(0, 550);
             EMLocation = new Vector2(1450, 550);
 
             Round = 1;
-
-            PickedStarter = false;
+            
             GameMode = GameMode.PickStarter;
 
             random = new Random();
@@ -196,6 +194,12 @@ namespace BattleMonsters
                     PickStarterElement = Color.White;
                     ButtonGuideTxt = "1: Fire Starter | 2: Water Starter | 3: Earth Starter";//Not showing up
                     GamePrintout.TxtPrintOut = "Which Starter would you like to pick?";
+                    if(mm.PickedStarter == true)
+                    {
+                        PickStarterElement = Color.Transparent;
+                        GameMode = GameMode.OutBattle;
+                        BattleReady();
+                    }
                     break;
                 case GameMode.InBattle:
                     BattleElement = Color.White;
@@ -374,76 +378,72 @@ namespace BattleMonsters
 
         #region Input
 
-        #region Pick Starter
+        //#region Pick Starter
 
-        /* Starter Guide
-              Starter 1 = Fire
-              Starter 2 = Water
-              Starter 3 = Earth
-             */
+        ///* Starter Guide
+        //      Starter 1 = Fire
+        //      Starter 2 = Water
+        //      Starter 3 = Earth
+        //     */
 
-        public void PickStarter()
-        {
-            if (input.KeyboardState.WasKeyPressed(Keys.D1))
-            {
-                ThisStarter(mm.FireStarter);
-            }
-            if (input.KeyboardState.WasKeyPressed(Keys.D2))
-            {
-                ThisStarter(mm.WaterStarter);
-            }
-            if (input.KeyboardState.WasKeyPressed(Keys.D3))
-            {
-                ThisStarter(mm.EarthStarter);
-            }
-        }
+        //public void PickStarter()
+        //{
+        //    if (input.KeyboardState.WasKeyPressed(Keys.D1))
+        //    {
+        //        ThisStarter(mm.FireStarter);
+        //    }
+        //    if (input.KeyboardState.WasKeyPressed(Keys.D2))
+        //    {
+        //        ThisStarter(mm.WaterStarter);
+        //    }
+        //    if (input.KeyboardState.WasKeyPressed(Keys.D3))
+        //    {
+        //        ThisStarter(mm.EarthStarter);
+        //    }
+        //}
 
-        void ThisStarter(Creature c)
-        {
-            P.CurrentMonster = c;
-            GamePrintout.TxtPrintOut = $"You have chosen {P.CurrentMonster.Name} as your starter!";
+        //void ThisStarter(Creature c)
+        //{
+        //    P.CurrentMonster = c;
+        //    GamePrintout.TxtPrintOut = $"You have chosen {P.CurrentMonster.Name} as your starter!";
 
-            //Enemy is at a type disadvantage
-            if ( c == mm.FireStarter) 
-            {
-                E.CurrentMonster = mm.EarthStarter;
-                Starter2.DrawColor = Color.Transparent;//If this is not here the unpicked stays visible
-            }
-            if (c == mm.WaterStarter) 
-            {
-                E.CurrentMonster = mm.FireStarter;
-                Starter3.DrawColor = Color.Transparent;
-            }
-            if (c == mm.EarthStarter) 
-            {
-                E.CurrentMonster = mm.WaterStarter;
-                Starter1.DrawColor = Color.Transparent;
-            }
+        //    //Enemy is at a type disadvantage
+        //    if (c == mm.FireStarter) { EnemyStarter(mm.EarthStarter); }
+        //    if (c == mm.WaterStarter) { EnemyStarter(mm.FireStarter); }
+        //    if (c == mm.EarthStarter) { EnemyStarter(mm.WaterStarter); }
 
-            PickedStarter = true;
-            PickStarterElement = Color.Transparent;
-            GameMode = GameMode.OutBattle;
-            BattleReady();
-        }
+        //    PickedStarter = true;
+        //    PickStarterElement = Color.Transparent;
+        //    GameMode = GameMode.OutBattle;
+        //    BattleReady();
+        //}
+
+        //void EnemyStarter(Creature c)
+        //{
+        //    E.CurrentMonster = c;
+        //    Starter2.DrawColor = Color.Transparent;//If this is not here the unpicked stays visible
+        //}
 
         void BattleReady()
         {
             P.CurrentMonster.Location = PMLocation;
             P.CurrentMonster.DrawColor = BattleElement;
             P.CurrentMonster.GetStats(Round);
+            g.Components.Add(P.CurrentMonster);
 
             E.CurrentMonster.Location = EMLocation;
             E.CurrentMonster.DrawColor = BattleElement;
             E.CurrentMonster.GetStats(Round);
+            g.Components.Add(E.CurrentMonster);
 
         }
-        #endregion
+        //#endregion
 
         public void HandleInput(GameTime gameTime)
         {
             //Controls differ whether the player is in battle
             //Don't want controls to work in the other game mode
-            if(PickedStarter == false) { PickStarter(); }
+            if(mm.PickedStarter == false) { mm.PickStarter(); }
 
             if (GameMode == GameMode.OutBattle)
             {
@@ -576,7 +576,12 @@ namespace BattleMonsters
                 sb.DrawString(font, $"{E.CurrentMonster.Name}'s HP: {E.CurrentMonster.HP}/{E.CurrentMonster.HPMax}\n\nStats:\nATK Score: {E.CurrentMonster.ATKScore}\nDEF Score: {E.CurrentMonster.DEFScore}", EM_HPLocation, BattleElement);
             }
 
-            if(CurrentBattle != null)
+            //Starter
+            sb.Draw(Starter1Texture, new Rectangle((int)Starter1.Location.X, (int)Starter1.Location.Y, Starter1.spriteTexture.Width, Starter1.spriteTexture.Height), PickStarterElement);
+            sb.Draw(Starter2Texture, new Rectangle((int)Starter2.Location.X, (int)Starter2.Location.Y, Starter2.spriteTexture.Width, Starter2.spriteTexture.Height), PickStarterElement);
+            sb.Draw(Starter3Texture, new Rectangle((int)Starter3.Location.X, (int)Starter3.Location.Y, Starter3.spriteTexture.Width, Starter3.spriteTexture.Height), PickStarterElement);
+
+            if (CurrentBattle != null)
             {
                 sb.DrawString(font, $"Turn: {CurrentBattle.Turn}", TurntxtLoc, BattleElement);
             }

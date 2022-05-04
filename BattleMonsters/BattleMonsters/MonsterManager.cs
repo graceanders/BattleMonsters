@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MonoGameLibrary.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +10,9 @@ namespace BattleMonsters
 {
     class MonsterManager : DrawableGameComponent
     {
+        Game g;
+        InputHandler input;
+
         public Creature
             EarthStarter,
             FireStarter,
@@ -27,10 +32,18 @@ namespace BattleMonsters
 
         public List<Creature> Monsters;
 
-        Game g;
+        public bool PickedStarter;
 
-        public MonsterManager (Game game) : base(game)
+        Player P;
+        Enemy E;
+
+        public MonsterManager (Game game, Player player, Enemy enemy) : base(game)
         {
+            input = (InputHandler)game.Services.GetService(typeof(IInputHandler));
+
+            P = player;
+            E = enemy;
+
             Monsters = new List<Creature>();
 
             EarthStarter = new Creature(game, "Dust");
@@ -56,8 +69,12 @@ namespace BattleMonsters
             g = game;
         }
 
+        Creature Starter1, Starter2, Starter3;
+        Texture2D Starter1Texture, Starter2Texture, Starter3Texture;
         protected override void LoadContent()
         {
+
+            #region Load All Monsters
             EarthStarter.spriteTexture = g.Content.Load<Texture2D>("EarthStarter");
             Monsters.Add(EarthStarter);
             FireStarter.spriteTexture = g.Content.Load<Texture2D>("FireStarter");
@@ -92,8 +109,67 @@ namespace BattleMonsters
             Monsters.Add(FireDragon);
             WaterDragon.spriteTexture = g.Content.Load<Texture2D>("WaterDragon");
             Monsters.Add(WaterDragon);
+            #endregion
+
+            #region Load Starter
+            Starter1 = FireStarter;
+            Starter1.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 3) - (Starter1.spriteTexture.Width / 2)), 550);
+            Starter1Texture = Starter1.spriteTexture;
+
+            Starter2 = WaterStarter;
+            Starter2.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 2) - (Starter2.spriteTexture.Width / 2)), 550);
+            Starter2Texture = Starter2.spriteTexture;
+
+            Starter3 = EarthStarter;
+            Starter3.Location = new Vector2(1040, 550);
+            Starter3Texture = Starter3.spriteTexture;
+
+            PickedStarter = false;
+            #endregion
 
             base.LoadContent();
+        }
+
+
+        /* 
+           Starter 1 = Fire
+           Starter 2 = Water
+           Starter 3 = Earth
+        */
+
+        public void PickStarter()
+        {
+            if (input.KeyboardState.WasKeyPressed(Keys.D1))
+            {
+                ThisStarter(FireStarter);
+            }
+            if (input.KeyboardState.WasKeyPressed(Keys.D2))
+            {
+                ThisStarter(WaterStarter);
+            }
+            if (input.KeyboardState.WasKeyPressed(Keys.D3))
+            {
+                ThisStarter(EarthStarter);
+            }
+        }
+
+        void ThisStarter(Creature c)
+        {
+            P.CurrentMonster = c;
+            GamePrintout.TxtPrintOut = $"You have chosen {P.CurrentMonster.Name} as your starter!";
+
+            //Enemy is at a type disadvantage
+            if (c == FireStarter) { EnemyStarter(EarthStarter); }
+            if (c == WaterStarter) { EnemyStarter(FireStarter); }
+            if (c == EarthStarter) { EnemyStarter(WaterStarter); }
+
+            PickedStarter = true;
+        }
+
+        void EnemyStarter(Creature c)
+        {
+            E.CurrentMonster = c;
+            Starter2.DrawColor = Color.Transparent;//If this is not here the unpicked stays visible
         }
     }
 }
