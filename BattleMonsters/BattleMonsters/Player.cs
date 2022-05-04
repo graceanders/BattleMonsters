@@ -54,5 +54,10 @@ namespace BattleMonsters
             }
             return false;
         }
+
+        public int GetDeadMonsterCount()
+        {
+            return this.DeadMonsters.Count;
+        }
     }
 }

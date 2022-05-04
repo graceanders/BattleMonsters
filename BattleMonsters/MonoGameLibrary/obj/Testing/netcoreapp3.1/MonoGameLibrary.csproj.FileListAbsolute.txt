@@ -1,0 +1,12 @@
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\bin\Testing\netcoreapp3.1\Content\Arial.xnb
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\bin\Testing\netcoreapp3.1\Content\SpriteMarker.xnb
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\bin\Testing\netcoreapp3.1\MonoGameLibrary.deps.json
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\bin\Testing\netcoreapp3.1\MonoGameLibrary.dll
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\bin\Testing\netcoreapp3.1\MonoGameLibrary.pdb
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\obj\Testing\netcoreapp3.1\MonoGameLibrary.csproj.AssemblyReference.cache
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\obj\Testing\netcoreapp3.1\MonoGameLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\obj\Testing\netcoreapp3.1\MonoGameLibrary.AssemblyInfoInputs.cache
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\obj\Testing\netcoreapp3.1\MonoGameLibrary.AssemblyInfo.cs
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\obj\Testing\netcoreapp3.1\MonoGameLibrary.csproj.CoreCompileInputs.cache
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\obj\Testing\netcoreapp3.1\MonoGameLibrary.dll
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\MonoGameLibrary\obj\Testing\netcoreapp3.1\MonoGameLibrary.pdb

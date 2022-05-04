@@ -40,11 +40,12 @@ namespace BattleMonsters
         public Enemy E;
         //public Creature CPM, CEM;
 
+
         public Vector2 PMLocation, EMLocation;
 
         //Text Draw Locations
         Vector2 P_TextLocation, PM_HPLocation, E_TextLocation, EM_HPLocation;
-        Vector2 RoundtxtLoc, TurnTxtLoc;
+        Vector2 RoundtxtLoc, TurntxtLoc, CointxtLoc;
 
 
         SpriteFont font;
@@ -52,11 +53,12 @@ namespace BattleMonsters
 
         SpriteBatch sb;
 
-        Color PickStarterElement, BattleElement, OutOfBattleElement, AlwaysShow;
+        Color PickStarterElement, BattleElement, OutOfBattleElement, HealElement, AlwaysShow;
 
         public int Round;
 
         MonsterManager mm;
+        HealManager hm;
 
         BattleManager CurrentBattle;
 
@@ -78,13 +80,20 @@ namespace BattleMonsters
 
             GameState = GameState.Playing;
 
+            P = new Player();
+            E = new Enemy();
+
             mm = new MonsterManager(game);
+            hm = new HealManager(game, P);
             game.Components.Add(mm);
+            game.Components.Add(hm);
+
 
             g = game;
         }
 
         //TODO: Move Starter values and responsobilites to MonsterManager
+        //TODO: Vecor Values should be bassed off of screen width and height
         Creature Starter1, Starter2, Starter3;
         protected override void LoadContent()
         {
@@ -93,9 +102,7 @@ namespace BattleMonsters
             bigfont = this.Game.Content.Load<SpriteFont>("BigFont");
 
             GamePrintout.TxtPrintOut = "Welcome to Battle Monsters!";
-
-            P = new Player();
-            E = new Enemy();
+            
 
             AlwaysShow = Color.White;
 
@@ -112,6 +119,9 @@ namespace BattleMonsters
             Starter3.DrawColor = PickStarterElement;
             Starter3.Location = new Vector2(1040, 550);
 
+
+            //TODO: Dont have these by componenets, just draw out 3 images of the starters
+            //^ this is necessary so that CurrentMonster can be Components which need to be
             g.Components.Add(Starter1);
             g.Components.Add(Starter2);
             g.Components.Add(Starter3);
@@ -133,12 +143,31 @@ namespace BattleMonsters
             EM_HPLocation = new Vector2(g.GraphicsDevice.Viewport.Width - 250, 80);
 
             RoundtxtLoc = new Vector2((g.GraphicsDevice.Viewport.Width / 2) - 50, 20);
-            TurnTxtLoc = new Vector2(RoundtxtLoc.X, (RoundtxtLoc.Y + 50));
+            TurntxtLoc = new Vector2(RoundtxtLoc.X, (RoundtxtLoc.Y + 50));
+            CointxtLoc = new Vector2((g.GraphicsDevice.Viewport.Width - 150), 1025);
             #endregion
+
+#if TESTING
+            SetUpTestingValues();
+#endif
 
             base.LoadContent();
         }
 
+        void SetUpTestingValues()
+        {
+            P.Coins = 100;
+
+            //Healing
+            Creature HealableMonster;
+            HealableMonster = mm.Monsters[7];
+            HealableMonster.GetStats(Round);
+            P.DeadMonsters.Add(HealableMonster);
+
+            HealableMonster = mm.Monsters[12];
+            HealableMonster.GetStats(Round);
+            P.DeadMonsters.Add(HealableMonster);
+        }
 
         int CalculateHeightMargine(Creature C) { return (C.spriteTexture.Height / 2); }
         int CalculateWidthMargine(Creature C) { return (C.spriteTexture.Width / 2); }
@@ -185,7 +214,16 @@ namespace BattleMonsters
                     ButtonGuideTxt = "L: Lock in Monster 1: Swap to First | 2: Swap to Second | 3: Swap to Third";
                     break;
                 case GameMode.Healing:
+                    HealElement = Color.White;
+                    hm.HealMonster();
+                    ButtonGuideTxt = "T: Heal This Monster | ->: Next Monster | E: Exit";
 
+                    if (hm.GetExitHealing()) 
+                    { 
+                        GameMode = GameMode.OutBattle;
+                        HealElement = Color.Transparent;
+                        GamePrintout.TxtPrintOut = "";//Clear
+                    }
                     break;
                 case GameMode.Raffel:
 
@@ -298,7 +336,7 @@ namespace BattleMonsters
             }
         }
 
-        //TODO: will need texting but I think Raffle is pretty solid!!
+        //TODO: will need testing but I think Raffle is pretty solid!!
         #region Raffle
 
         int RaffleCost = 20;
@@ -333,74 +371,9 @@ namespace BattleMonsters
 
         #endregion
 
-        //TODO: Get Input Working for Healing
-
-        #region Healing
-
-        int HealCost = 10;
-        int NeedHeal;
-        Creature HealedMonster;
-        public void HealMonster()//I'd like to have the player pick which monster they heal but I'm not sure how to get the input to corispond
-        {
-            GamePrintout.TxtPrintOut = "Welcome to the Healing Station!\n";
-
-            foreach (Creature monster in P.DeadMonsters)
-            {
-                NeedHeal++;
-            }
-
-            if (NeedHeal == 0)
-            {
-                GamePrintout.TxtPrintOut += "You have 0 Monsters that need healing";
-            }
-            else
-            {
-                if(P.Coins >= HealCost)//Can heal at least one Monster
-                {
-                    PickWhichToHeal();
-                }
-                else
-                {
-                    GamePrintout.TxtPrintOut += $"You do not have enough to heal any of your Monsters\nYou have {P.Coins}, you need {HealCost}";
-                }
-            }
-
-        }
-
-        //TODO: Instead of displaying all show 5 and allow them to go to the next "row" or next Page
-        bool Heal1, Heal2, Heal3, Heal4, Heal5;
-        public void Heal(Creature c)
-        {
-            P.Coins -= HealCost;
-
-            P.DeadMonsters.Remove(P.DeadMonsters[0]);//Remove the first monster from DeadMonsters
-            HealedMonster = P.DeadMonsters[0];//Set it locally
-            P.AllMonsters.Add(HealedMonster);//Add to AllMonsters
-        }
-
-        int ToChooseFrom;
-        void PickWhichToHeal()
-        {
-            GamePrintout.TxtPrintOut += "Which Monster would you like the Heal?";
-            //This is going to be complicated -__-
-
-            //Caps at 5
-            if (NeedHeal > 5) { ToChooseFrom = 5; }
-            else { ToChooseFrom = P.DeadMonsters.Count; }
-
-            for (int i = 0; i < ToChooseFrom; i++)
-            {
-                int Number = i++;
-                GamePrintout.TxtPrintOut += $"\n{Number}: {P.DeadMonsters[i]}";
-                //getting the input to work for this is gonna be a mess
-            }
-            GamePrintout.TxtPrintOut += "\nClick the number that corisponds with the Monster you'd like to heal";
-        }
-        #endregion
 
         #region Input
 
-        //TODO Currently just giving the player a starter allow them to pick
         #region Pick Starter
 
         /* Starter Guide
@@ -487,6 +460,8 @@ namespace BattleMonsters
                 }
                 if (input.KeyboardState.WasKeyPressed(Keys.H))
                 {
+                    hm.MonsterHealed = false;
+                    hm.ExitHealing = false;
                     GamePrintout.TxtPrintOut = "You have select to Heal your Monsters!";
                     GameMode = GameMode.Healing;
                 }
@@ -508,7 +483,7 @@ namespace BattleMonsters
             }
             if(GameMode == GameMode.Healing)
             {
-                HealInput();
+                hm.HealInput();
             }
         }
 
@@ -560,54 +535,7 @@ namespace BattleMonsters
         }
         //------------------------
 
-        void HealInput()
-        {
-            //Currently only shows first 5
-
-            //I hate this but i do not know a more efficiant way to do this
-            if (NeedHeal == 1) { Heal1 = true; }
-            if (NeedHeal == 2) { Heal2 = true; }
-            if (NeedHeal == 3) { Heal3 = true; }
-            if (NeedHeal == 4) { Heal4 = true; }
-            if (NeedHeal == 5) { Heal5 = true; }
-
-            if (Heal1)
-            {
-                if (input.KeyboardState.WasKeyPressed(Keys.D1))
-                {
-                    Heal(P.DeadMonsters[0]);
-                }
-            }
-            if (Heal2)
-            {
-                if (input.KeyboardState.WasKeyPressed(Keys.D2))
-                {
-                    Heal(P.DeadMonsters[1]);
-                }
-            }
-            if (Heal3)
-            {
-                if (input.KeyboardState.WasKeyPressed(Keys.D3))
-                {
-                    Heal(P.DeadMonsters[2]);
-                }
-            }
-            if (Heal4)
-            {
-                if (input.KeyboardState.WasKeyPressed(Keys.D4))
-                {
-                    Heal(P.DeadMonsters[3]);
-                }
-            }
-            if (Heal5)
-            {
-                if (input.KeyboardState.WasKeyPressed(Keys.D5))
-                {
-                    Heal(P.DeadMonsters[4]);
-                }
-            }
-        }
-        #endregion
+        
 
         string GameUpdateTxt;
         void UpdateGameInfoTxt()
@@ -635,21 +563,22 @@ namespace BattleMonsters
             sb.Begin();
 
             sb.DrawString(bigfont, $"Round: {Round}", RoundtxtLoc, AlwaysShow);
+            sb.DrawString(bigfont, $"Coins: {P.Coins}", CointxtLoc, AlwaysShow);
 
             if(P.CurrentMonster != null)
             {
                 //Player
                 sb.DrawString(bigfont, $"Player: {P.Name}", P_TextLocation, BattleElement);
-                sb.DrawString(font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
+                sb.DrawString(font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}/{P.CurrentMonster.HPMax}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
 
                 //Enemy
                 sb.DrawString(bigfont, $"Enemy: {E.Name}", E_TextLocation, BattleElement);
-                sb.DrawString(font, $"{E.CurrentMonster.Name}'s HP: {E.CurrentMonster.HP}\n\nStats:\nATK Score: {E.CurrentMonster.ATKScore}\nDEF Score: {E.CurrentMonster.DEFScore}", EM_HPLocation, BattleElement);
+                sb.DrawString(font, $"{E.CurrentMonster.Name}'s HP: {E.CurrentMonster.HP}/{E.CurrentMonster.HPMax}\n\nStats:\nATK Score: {E.CurrentMonster.ATKScore}\nDEF Score: {E.CurrentMonster.DEFScore}", EM_HPLocation, BattleElement);
             }
 
             if(CurrentBattle != null)
             {
-                sb.DrawString(font, $"Turn: {CurrentBattle.Turn}", TurnTxtLoc, BattleElement);
+                sb.DrawString(font, $"Turn: {CurrentBattle.Turn}", TurntxtLoc, BattleElement);
             }
 
             #region Game Info Text Info
@@ -665,6 +594,7 @@ namespace BattleMonsters
             if (GameMode == GameMode.OutBattle) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, OutOfBattleElement); }
             if (GameMode == GameMode.InBattle) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, BattleElement); }
             if(GameMode == GameMode.MonsterSwap) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, BattleElement); }
+            if(GameMode == GameMode.Healing) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, HealElement); }
             #endregion
 
             sb.End();
@@ -672,7 +602,6 @@ namespace BattleMonsters
             base.Draw(gameTime);
         }
 
-
     }
-
+    #endregion
 }

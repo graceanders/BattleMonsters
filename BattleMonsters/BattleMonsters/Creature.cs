@@ -11,8 +11,10 @@ namespace BattleMonsters
 {
     public class Creature : DrawableSprite, IAttack, IDefend
     {
+        //TODO: Build Up Type Advantage
         public string Name { get; set; }
         public int HP { get; set; }
+        public int HPMax { get; set; }
         public int ATKScore { get; set; }
         public int DEFScore { get; set; }
 
@@ -41,6 +43,7 @@ namespace BattleMonsters
 
             int hp = stats.Next((MinHP * Round), (MaxHP * Round));
             this.HP = hp;
+            this.HPMax = hp;
 
             int atk = stats.Next((MinATKScore * Round), (MaxATKScore * Round));
             this.ATKScore = atk;
@@ -79,5 +82,10 @@ namespace BattleMonsters
             return DamagePercentage;
         }
 
+
+        public string DisplayStats()
+        {
+            return $"Stats:\nHp: {this.HP}/{this.HPMax}\nATK Score: {this.ATKScore}\nDEF Score: {this.DEFScore}";
+        }
     }
 }

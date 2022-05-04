@@ -171,7 +171,11 @@ namespace BattleMonsters
             {
                 RunSucess(WhichCharacter);
             }
-            GamePrintout.TxtPrintOut += $"\nThe {WhichCharacter.Name} was unsucesfull in their Run attempt";
+            else
+            {
+                GamePrintout.TxtPrintOut += $"\nThe {WhichCharacter.Name} was unsucesfull in their Run attempt";
+            }
+            
         }
 
         public bool RunSucess(Character WhichCharacter)
@@ -255,7 +259,6 @@ namespace BattleMonsters
 
         }
 
-        bool Attacked;
         public void InBattleInput()
         {
             if (!MoveMade)
