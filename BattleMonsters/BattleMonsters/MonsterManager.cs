@@ -69,8 +69,8 @@ namespace BattleMonsters
             g = game;
         }
 
-        Creature Starter1, Starter2, Starter3;
-        Texture2D Starter1Texture, Starter2Texture, Starter3Texture;
+        public Creature Starter1, Starter2, Starter3;
+        public Texture2D Starter1Texture, Starter2Texture, Starter3Texture;
         protected override void LoadContent()
         {
 
@@ -156,6 +156,7 @@ namespace BattleMonsters
         void ThisStarter(Creature c)
         {
             P.CurrentMonster = c;
+            P.Team.Add(P.CurrentMonster);
             GamePrintout.TxtPrintOut = $"You have chosen {P.CurrentMonster.Name} as your starter!";
 
             //Enemy is at a type disadvantage
@@ -169,7 +170,9 @@ namespace BattleMonsters
         void EnemyStarter(Creature c)
         {
             E.CurrentMonster = c;
+            E.Team.Add(E.CurrentMonster);
             Starter2.DrawColor = Color.Transparent;//If this is not here the unpicked stays visible
         }
+
     }
 }

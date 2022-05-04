@@ -8,6 +8,8 @@ using System.Text;
 
 namespace BattleMonsters
 {
+    //TODO: CurrentMonsters Sprite dosne't adjust with Swaps
+
     public enum GameMode { PickStarter, InBattle, OutBattle, MonsterSwap, Healing, Raffel, ManageTeam }
     public enum GameState { Won, Playing, Lost }
 
@@ -93,10 +95,8 @@ namespace BattleMonsters
             g = game;
         }
 
-        //TODO: Move Starter values and responsobilites to MonsterManager
         //TODO: Vecor Values should be bassed off of screen width and height
-        Creature Starter1, Starter2, Starter3;
-        Texture2D Starter1Texture, Starter2Texture, Starter3Texture;
+
         protected override void LoadContent()
         {
             sb = new SpriteBatch(this.Game.GraphicsDevice);
@@ -104,26 +104,8 @@ namespace BattleMonsters
             bigfont = this.Game.Content.Load<SpriteFont>("BigFont");
 
             GamePrintout.TxtPrintOut = "Welcome to Battle Monsters!";
-            
 
             AlwaysShow = Color.White;
-
-            //Starter
-            Starter1 = mm.FireStarter;
-            Starter1.DrawColor = PickStarterElement;
-            Starter1.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 3) - (Starter1.spriteTexture.Width / 2)), 550);
-            Starter1Texture = Starter1.spriteTexture;
-
-            Starter2 = mm.WaterStarter;
-            Starter2.DrawColor = PickStarterElement;
-            Starter2.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 2) - (Starter2.spriteTexture.Width / 2)), 550);
-            Starter2Texture = Starter2.spriteTexture;
-
-            Starter3 = mm.EarthStarter;
-            Starter3.DrawColor = PickStarterElement;
-            Starter3.Location = new Vector2(1040, 550);
-            Starter3Texture = Starter3.spriteTexture;
-
 
             PMLocation = new Vector2(0, 550);
             EMLocation = new Vector2(1450, 550);
@@ -165,6 +147,16 @@ namespace BattleMonsters
             HealableMonster = mm.Monsters[12];
             HealableMonster.GetStats(Round);
             P.DeadMonsters.Add(HealableMonster);
+
+            //Full Team
+            Creature AddToTeam;
+            AddToTeam = mm.WaterJelly;
+            AddToTeam.GetStats(Round);
+            P.Team.Add(AddToTeam);
+
+            AddToTeam = mm.EarthBird;
+            AddToTeam.GetStats(Round);
+            P.Team.Add(AddToTeam);
         }
 
         int CalculateHeightMargine(Creature C) { return (C.spriteTexture.Height / 2); }
@@ -482,9 +474,9 @@ namespace BattleMonsters
             }
 
             //Starter
-            sb.Draw(Starter1Texture, new Rectangle((int)Starter1.Location.X, (int)Starter1.Location.Y, Starter1.spriteTexture.Width, Starter1.spriteTexture.Height), PickStarterElement);
-            sb.Draw(Starter2Texture, new Rectangle((int)Starter2.Location.X, (int)Starter2.Location.Y, Starter2.spriteTexture.Width, Starter2.spriteTexture.Height), PickStarterElement);
-            sb.Draw(Starter3Texture, new Rectangle((int)Starter3.Location.X, (int)Starter3.Location.Y, Starter3.spriteTexture.Width, Starter3.spriteTexture.Height), PickStarterElement);
+            sb.Draw(mm.Starter1Texture, new Rectangle((int)mm.Starter1.Location.X, (int)mm.Starter1.Location.Y, mm.Starter1.spriteTexture.Width, mm.Starter1.spriteTexture.Height), PickStarterElement);
+            sb.Draw(mm.Starter2Texture, new Rectangle((int)mm.Starter2.Location.X, (int)mm.Starter2.Location.Y, mm.Starter2.spriteTexture.Width, mm.Starter2.spriteTexture.Height), PickStarterElement);
+            sb.Draw(mm.Starter3Texture, new Rectangle((int)mm.Starter3.Location.X, (int)mm.Starter3.Location.Y, mm.Starter3.spriteTexture.Width, mm.Starter3.spriteTexture.Height), PickStarterElement);
 
             if (CurrentBattle != null)
             {

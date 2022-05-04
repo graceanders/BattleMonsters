@@ -61,11 +61,6 @@ namespace BattleMonsters
 
             Turn = 1;
 
-            //Player
-            P.CurrentMonster = P.Team[0];
-
-            //Enemy
-            E.CurrentMonster = E.Team[0];
 
             this.BattleState = BattleState.Playing;
         }
