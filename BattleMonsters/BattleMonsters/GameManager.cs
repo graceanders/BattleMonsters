@@ -213,9 +213,11 @@ namespace BattleMonsters
                     ButtonGuideTxt = "B: Battle | H: Heal | T: Manage Team";
                     break;
                 case GameMode.MonsterSwap:
+                    //WhichBattle();
                     BattleElement = Color.White;
                     OutOfBattleElement = Color.Transparent;
                     ButtonGuideTxt = "L: Lock in Monster 1: Swap to First | 2: Swap to Second | 3: Swap to Third";
+                    if (CurrentBattle.LockedIn) { GameMode = GameMode.InBattle;}
                     break;
                 case GameMode.Healing:
                     HealElement = Color.White;
@@ -374,56 +376,6 @@ namespace BattleMonsters
         }
 
         #endregion
-
-
-        #region Input
-
-        //#region Pick Starter
-
-        ///* Starter Guide
-        //      Starter 1 = Fire
-        //      Starter 2 = Water
-        //      Starter 3 = Earth
-        //     */
-
-        //public void PickStarter()
-        //{
-        //    if (input.KeyboardState.WasKeyPressed(Keys.D1))
-        //    {
-        //        ThisStarter(mm.FireStarter);
-        //    }
-        //    if (input.KeyboardState.WasKeyPressed(Keys.D2))
-        //    {
-        //        ThisStarter(mm.WaterStarter);
-        //    }
-        //    if (input.KeyboardState.WasKeyPressed(Keys.D3))
-        //    {
-        //        ThisStarter(mm.EarthStarter);
-        //    }
-        //}
-
-        //void ThisStarter(Creature c)
-        //{
-        //    P.CurrentMonster = c;
-        //    GamePrintout.TxtPrintOut = $"You have chosen {P.CurrentMonster.Name} as your starter!";
-
-        //    //Enemy is at a type disadvantage
-        //    if (c == mm.FireStarter) { EnemyStarter(mm.EarthStarter); }
-        //    if (c == mm.WaterStarter) { EnemyStarter(mm.FireStarter); }
-        //    if (c == mm.EarthStarter) { EnemyStarter(mm.WaterStarter); }
-
-        //    PickedStarter = true;
-        //    PickStarterElement = Color.Transparent;
-        //    GameMode = GameMode.OutBattle;
-        //    BattleReady();
-        //}
-
-        //void EnemyStarter(Creature c)
-        //{
-        //    E.CurrentMonster = c;
-        //    Starter2.DrawColor = Color.Transparent;//If this is not here the unpicked stays visible
-        //}
-
         void BattleReady()
         {
             P.CurrentMonster.Location = PMLocation;
@@ -437,7 +389,8 @@ namespace BattleMonsters
             g.Components.Add(E.CurrentMonster);
 
         }
-        //#endregion
+
+        #region Input
 
         public void HandleInput(GameTime gameTime)
         {
@@ -479,63 +432,15 @@ namespace BattleMonsters
             }
             if(GameMode == GameMode.MonsterSwap)
             {
-                MonsterSwapInput();
+                //Dont love this 
+                if(CurrentBattle == null) { WhichBattle(); }
+                CurrentBattle.MonsterSwapInput();
             }
             if(GameMode == GameMode.Healing)
             {
                 hm.HealInput();
             }
         }
-
-
-        //TODO: Move to InBattle and MonsterSwap t0 Battle Manager
-        
-
-        void MonsterSwapInput()
-        {
-            //Switches which monster the user is using at the moment
-            //Probally create a bool value for is the player is attacking/ being attacked so they cant switch mid that
-            if (input.KeyboardState.WasKeyPressed(Keys.D1))
-            {
-                P.CurrentMonster = P.Team[0];
-                GamePrintout.TxtPrintOut = "You have Swapped to your 1st Monster!\nLock in to begin!";
-            }
-            if (input.KeyboardState.WasKeyPressed(Keys.D2))
-            {
-                if (P.Team.Count == 1)//No 2nd Monster
-                {
-                    GamePrintout.TxtPrintOut = "You only have 1 Monster in your team and cannot swap\nLock in to begin!";
-                }
-                else
-                {
-                    P.CurrentMonster = P.Team[1];
-                    GamePrintout.TxtPrintOut = "You have Swapped to your 2st Monster!\nLock in to begin!";
-                }
-            }
-            if (input.KeyboardState.WasKeyPressed(Keys.D3))
-            {
-                if (P.Team.Count < 3)//No 3rd
-                {
-                    if (P.Team.Count == 1)
-                        GamePrintout.TxtPrintOut = "You only have 1 Monster in your Team and cannot Swap\nLock in to begin!";
-                    else
-                        GamePrintout.TxtPrintOut = "You only have 2 Monster in your Team and cannot Swap to your 3rd\nTry Swaping to the 1st or 2nd Monster";
-                }
-                else
-                {
-                    P.CurrentMonster = P.Team[2];
-                    GamePrintout.TxtPrintOut = "You have Swapped to your 3st Monster!\nLock in to begin!";
-                }
-            }
-            if (input.KeyboardState.WasKeyPressed(Keys.L))
-            {
-                GameMode = GameMode.InBattle;
-                GamePrintout.TxtPrintOut = $"You have selected {P.CurrentMonster.Name}\nThe Battle will commense!";
-            }
-        }
-        //------------------------
-
-        
 
         string GameUpdateTxt;
         void UpdateGameInfoTxt()

@@ -44,6 +44,8 @@ namespace BattleMonsters
 
         int margin = 10;
 
+        public bool LockedIn;
+
         //Allow the enemy AI to check CPM's type and try to swith to a monster that beats it?
 
         //this would requre a new Battle Manager to be created for every new enemy
@@ -276,6 +278,50 @@ namespace BattleMonsters
                 {
                     this.Round(false);//Run
                 }
+            }
+        }
+
+        public void MonsterSwapInput()
+        {
+            //Switches which monster the user is using at the moment
+            //Probally create a bool value for is the player is attacking/ being attacked so they cant switch mid that
+            if (input.KeyboardState.WasKeyPressed(Keys.D1))
+            {
+                P.CurrentMonster = P.Team[0];
+                GamePrintout.TxtPrintOut = "You have Swapped to your 1st Monster!\nLock in to begin!";
+            }
+            if (input.KeyboardState.WasKeyPressed(Keys.D2))
+            {
+                if (P.Team.Count == 1)//No 2nd Monster
+                {
+                    GamePrintout.TxtPrintOut = "You only have 1 Monster in your team and cannot swap\nLock in to begin!";
+                }
+                else
+                {
+                    P.CurrentMonster = P.Team[1];
+                    GamePrintout.TxtPrintOut = "You have Swapped to your 2st Monster!\nLock in to begin!";
+                }
+            }
+            if (input.KeyboardState.WasKeyPressed(Keys.D3))
+            {
+                if (P.Team.Count < 3)//No 3rd
+                {
+                    if (P.Team.Count == 1)
+                        GamePrintout.TxtPrintOut = "You only have 1 Monster in your Team and cannot Swap\nLock in to begin!";
+                    else
+                        GamePrintout.TxtPrintOut = "You only have 2 Monster in your Team and cannot Swap to your 3rd\nTry Swaping to the 1st or 2nd Monster";
+                }
+                else
+                {
+                    P.CurrentMonster = P.Team[2];
+                    GamePrintout.TxtPrintOut = "You have Swapped to your 3st Monster!\nLock in to begin!";
+                }
+            }
+            if (input.KeyboardState.WasKeyPressed(Keys.L))
+            {
+                
+                LockedIn = true;
+                GamePrintout.TxtPrintOut = $"You have selected {P.CurrentMonster.Name}\nThe Battle will commense!";
             }
         }
 
