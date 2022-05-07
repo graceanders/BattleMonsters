@@ -18,12 +18,17 @@ namespace BattleMonsters
 
         Random random;
 
+        public Color RaffleElement;
+
         public Texture2D PulledMonsterSprite, WhatMonster;
         public Rectangle MonsterPulledLoc;
+
+        SpriteBatch sb;
 
         public RaffleManager(Game game, Player p, MonsterManager MM, int round) : base(game)
         {
             input = (InputHandler)game.Services.GetService(typeof(IInputHandler));
+            sb = new SpriteBatch(game.GraphicsDevice);
             P = p;
 
             mm = MM;
@@ -32,16 +37,6 @@ namespace BattleMonsters
             random = new Random();
             WhatMonster = game.Content.Load<Texture2D>("What");
             MonsterPulledLoc = new Rectangle(game.GraphicsDevice.Viewport.Width / 4, 100, 250, 250);
-        }
-
-        protected override void LoadContent()
-        {
-            base.LoadContent();
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
         }
 
         int RaffleCost = 20;
@@ -92,9 +87,5 @@ namespace BattleMonsters
         public bool ExitRaffle = false;
         public bool GetExitRaffle() { return ExitRaffle; }
 
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-        }
     }
 }

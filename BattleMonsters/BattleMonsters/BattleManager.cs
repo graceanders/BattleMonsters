@@ -37,9 +37,6 @@ namespace BattleMonsters
         //Randoms:
         Random RunAttempt = new Random();
 
-
-        bool PlayerTurn, PlayerSwaped;
-
         bool PlayerDid;
 
         int margin = 10;
@@ -72,7 +69,6 @@ namespace BattleMonsters
 
         public override void Initialize()
         {
-            PlayerSwaped = false;
             base.Initialize();
         }
 

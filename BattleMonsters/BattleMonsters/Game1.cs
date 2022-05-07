@@ -52,6 +52,7 @@ namespace BattleMonsters
         {
             // TODO: Add your initialization logic here
 
+            //WARNING: Don't debug with this on, will soft lock
             #region Fullscreen
             //this._graphics.IsFullScreen = true;
             //this._graphics.ApplyChanges();

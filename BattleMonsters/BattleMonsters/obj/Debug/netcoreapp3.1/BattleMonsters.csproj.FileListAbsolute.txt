@@ -128,3 +128,5 @@ C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\BattleMonsters\obj\Deb
 C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\BattleMonsters\obj\Debug\netcoreapp3.1\BattleMonsters.dll
 C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\BattleMonsters\obj\Debug\netcoreapp3.1\BattleMonsters.pdb
 C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\BattleMonsters\obj\Debug\netcoreapp3.1\BattleMonsters.genruntimeconfig.cache
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\BattleMonsters\bin\Debug\netcoreapp3.1\Content\Empty.xnb
+C:\Users\grace\source\repos\BattleMonsters\BattleMonsters\BattleMonsters\bin\Debug\netcoreapp3.1\Content\What.xnb

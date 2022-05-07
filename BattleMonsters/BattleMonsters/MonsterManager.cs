@@ -37,6 +37,12 @@ namespace BattleMonsters
         Player P;
         Enemy E;
 
+
+        public Rectangle TeamOneLoc, TeamTwoLoc, TeamThreeLoc;
+        public Texture2D EmptySpot;
+
+        public Rectangle Starter1Loc, Starter2Loc, Starter3Loc;
+
         public MonsterManager (Game game, Player player, Enemy enemy) : base(game)
         {
             input = (InputHandler)game.Services.GetService(typeof(IInputHandler));
@@ -69,10 +75,17 @@ namespace BattleMonsters
             g = game;
         }
 
+        int margin = 20;
+        int size = 100;
         public Creature Starter1, Starter2, Starter3;
         public Texture2D Starter1Texture, Starter2Texture, Starter3Texture;
         protected override void LoadContent()
         {
+            TeamOneLoc = new Rectangle(200, margin, size, size);
+            TeamTwoLoc = new Rectangle(TeamOneLoc.X + size, margin, size, size);
+            TeamThreeLoc = new Rectangle(TeamTwoLoc.X + size, margin, size, size);
+
+            EmptySpot = g.Content.Load<Texture2D>("Empty");
 
             #region Load All Monsters
             EarthStarter.spriteTexture = g.Content.Load<Texture2D>("EarthStarter");
@@ -113,15 +126,16 @@ namespace BattleMonsters
 
             #region Load Starter
             Starter1 = FireStarter;
-            Starter1.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 3) - (Starter1.spriteTexture.Width / 2)), 550);
+            Starter1.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 3) - (Starter1.spriteTexture.Width / 2)), g.GraphicsDevice.Viewport.Height - 400);
             Starter1Texture = Starter1.spriteTexture;
 
             Starter2 = WaterStarter;
-            Starter2.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 2) - (Starter2.spriteTexture.Width / 2)), 550);
+            Starter2.Location = new Vector2(((g.GraphicsDevice.Viewport.Width / 2) - (Starter2.spriteTexture.Width / 2)), g.GraphicsDevice.Viewport.Height - 400);
             Starter2Texture = Starter2.spriteTexture;
 
+            int S3Loc = (int)(Starter2.Location.X + (Starter2.Location.X - Starter1.Location.X));
             Starter3 = EarthStarter;
-            Starter3.Location = new Vector2(1040, 550);
+            Starter3.Location = new Vector2(S3Loc, g.GraphicsDevice.Viewport.Height - 400);
             Starter3Texture = Starter3.spriteTexture;
 
             PickedStarter = false;

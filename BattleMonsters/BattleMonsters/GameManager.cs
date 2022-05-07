@@ -55,7 +55,7 @@ namespace BattleMonsters
 
         SpriteBatch sb;
 
-        Color PickStarterElement, BattleElement, OutOfBattleElement, HealElement, RaffleElement, AlwaysShow;
+        Color PickStarterElement, BattleElement, OutOfBattleElement, HealElement, AlwaysShow;
 
         public int Round;
 
@@ -96,6 +96,7 @@ namespace BattleMonsters
 
         //TODO: Vecor Values should be bassed off of screen width and height
 
+        int margin = 50;
         protected override void LoadContent()
         {
             sb = new SpriteBatch(this.Game.GraphicsDevice);
@@ -106,8 +107,8 @@ namespace BattleMonsters
 
             AlwaysShow = Color.White;
 
-            PMLocation = new Vector2(0, 550);
-            EMLocation = new Vector2(1450, 550);
+            PMLocation = new Vector2(margin, g.GraphicsDevice.Viewport.Height - 400);
+            EMLocation = new Vector2((g.GraphicsDevice.Viewport.Width - mm.Starter1Texture.Width) - margin, g.GraphicsDevice.Viewport.Height - 400);
 
             Round = 1;
             
@@ -219,13 +220,13 @@ namespace BattleMonsters
                     }
                     break;
                 case GameMode.Raffel:
-                    RaffleElement = Color.White;
+                    rm.RaffleElement = Color.White;
                     rm.MonsterRaffle();
                     ButtonGuideTxt = "P: Pull from Raffle | E: Exit";
 
                     if (rm.GetExitRaffle())
                     {
-                        ExitMode(RaffleElement);
+                        ExitMode(rm.RaffleElement);
                     }
                     break;
                 case GameMode.ManageTeam:
@@ -453,11 +454,27 @@ namespace BattleMonsters
 
             sb.DrawString(bigfont, $"Round: {Round}", RoundtxtLoc, AlwaysShow);
             sb.DrawString(bigfont, $"Coins: {P.Coins}", CointxtLoc, AlwaysShow);
+            sb.DrawString(bigfont, $"Player: {P.Name}", P_TextLocation, AlwaysShow);
 
-            if(P.CurrentMonster != null)
+            #region Display Team
+            if (P.Team.Count == 0) 
+            { sb.Draw(mm.EmptySpot, mm.TeamOneLoc, AlwaysShow); }
+            else if(P.Team.Count >= 1) 
+            { sb.Draw(P.Team[0].spriteTexture, mm.TeamOneLoc, AlwaysShow); }
+
+            if(P.Team.Count < 2) 
+            { sb.Draw(mm.EmptySpot, mm.TeamTwoLoc, AlwaysShow); }
+            else if(P.Team.Count >= 2)
+            { sb.Draw(P.Team[1].spriteTexture, mm.TeamTwoLoc, AlwaysShow); }
+
+            if(P.Team.Count < 3) 
+            { sb.Draw(mm.EmptySpot, mm.TeamThreeLoc, AlwaysShow); }
+            else { sb.Draw(P.Team[2].spriteTexture, mm.TeamThreeLoc, AlwaysShow); }
+            #endregion
+
+            if (P.CurrentMonster != null)
             {
                 //Player
-                sb.DrawString(bigfont, $"Player: {P.Name}", P_TextLocation, BattleElement);
                 sb.DrawString(font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}/{P.CurrentMonster.HPMax}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
 
                 //Enemy
@@ -491,17 +508,10 @@ namespace BattleMonsters
             if(GameMode == GameMode.Healing) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, HealElement); }
             if (GameMode == GameMode.Raffel) 
             { 
-                sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, RaffleElement);
-                if (rm.PulledMonsterSprite == null)
-                {
-                    sb.Draw(rm.WhatMonster, rm.MonsterPulledLoc, RaffleElement);
-                }
-                else
-                {
-                    sb.Draw(rm.PulledMonsterSprite, rm.MonsterPulledLoc, RaffleElement);
-                }
-                
-            
+                sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, rm.RaffleElement);
+                if (rm.PulledMonsterSprite == null) { sb.Draw(rm.WhatMonster, rm.MonsterPulledLoc, rm.RaffleElement); }
+                else { sb.Draw(rm.PulledMonsterSprite, rm.MonsterPulledLoc, rm.RaffleElement); }
+
             }
             #endregion
 
