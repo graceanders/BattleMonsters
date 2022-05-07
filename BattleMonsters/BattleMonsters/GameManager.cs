@@ -55,7 +55,7 @@ namespace BattleMonsters
 
         SpriteBatch sb;
 
-        Color PickStarterElement, BattleElement, OutOfBattleElement, HealElement, AlwaysShow;
+        Color PickStarterElement, BattleElement, OutOfBattleElement, AlwaysShow;
 
         public int Round;
 
@@ -210,13 +210,13 @@ namespace BattleMonsters
                     if (CurrentBattle.LockedIn) { GameMode = GameMode.InBattle;}
                     break;
                 case GameMode.Healing:
-                    HealElement = Color.White;
+                    hm.HealElement = Color.White;
                     hm.HealMonster();
                     ButtonGuideTxt = "T: Heal This Monster | ->: Next Monster | E: Exit";
 
                     if (hm.GetExitHealing()) 
                     {
-                        ExitMode(HealElement);
+                        ExitMode(hm.HealElement);
                     }
                     break;
                 case GameMode.Raffel:
@@ -505,7 +505,12 @@ namespace BattleMonsters
             if (GameMode == GameMode.OutBattle) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, OutOfBattleElement); }
             if (GameMode == GameMode.InBattle) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, BattleElement); }
             if(GameMode == GameMode.MonsterSwap) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, BattleElement); }
-            if(GameMode == GameMode.Healing) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, HealElement); }
+            if(GameMode == GameMode.Healing) 
+            { 
+                sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, hm.HealElement); 
+                if(hm.NeedsHeal == 0) { sb.Draw(hm.NoMonsterSprite, hm.MonsterHealedLoc, hm.HealElement); }
+                else { sb.Draw(hm.HealedMonsterSprite, hm.MonsterHealedLoc, hm.HealElement); }
+            }
             if (GameMode == GameMode.Raffel) 
             { 
                 sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, rm.RaffleElement);

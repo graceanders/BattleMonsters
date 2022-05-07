@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary.Util;
 using System;
@@ -12,18 +13,31 @@ namespace BattleMonsters
     {
         Player P;
         InputHandler input;
+        Game g;
 
         public bool ExitHealing;
-        int NeedsHeal;
+        public int NeedsHeal;
         public bool MonsterHealed;
+
+        public Rectangle MonsterHealedLoc;
+        public Texture2D HealedMonsterSprite, NoMonsterSprite;
+
+        public Color HealElement;
 
         public HealManager(Game game, Player player) : base(game)
         {
             input = (InputHandler)game.Services.GetService(typeof(IInputHandler));
             P = player;
 
+            g = game;
         }
 
+        protected override void LoadContent()
+        {
+            MonsterHealedLoc = new Rectangle(g.GraphicsDevice.Viewport.Width / 4, 100, 250, 250);
+            NoMonsterSprite = g.Content.Load<Texture2D>("Empty");
+            base.LoadContent();
+        }
 
         #region Healing
 
@@ -65,7 +79,7 @@ namespace BattleMonsters
             P.DeadMonsters.Remove(c);//Remove the first monster from DeadMonsters
             HealedMonster = c;//Set it locally
             P.AllMonsters.Add(HealedMonster);//Add to All Monsters
-            GamePrintout.TxtPrintOut = $"{HealedMonster.Name} has been Healed, and added back to your colection of Monsters";
+            GamePrintout.TxtPrintOut = $"{HealedMonster.Name} has been Healed!\nThey are now back in your colection";
             MonsterHealed = true;
         }
 
@@ -76,6 +90,7 @@ namespace BattleMonsters
             else
             {
                 if (WhichMonster > NeedsHeal - 1) { WhichMonster = 0; }//Cycle Through
+                HealedMonsterSprite = P.DeadMonsters[WhichMonster].spriteTexture;
                 GamePrintout.TxtPrintOut += $"Would you like to heal {P.DeadMonsters[WhichMonster].Name}\n{P.DeadMonsters[WhichMonster].DisplayStats()}";
             }
             
