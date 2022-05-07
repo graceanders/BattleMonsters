@@ -8,21 +8,23 @@ using System.Text;
 
 namespace BattleMonsters
 {
-    //Maybe add visual that shows the monster your healing?
-    public class HealManager : DrawableGameComponent
+    public class HealManager : DrawableGameComponent, IInteractable
     {
         Player P;
         InputHandler input;
         Game g;
 
         public bool ExitHealing;
-        public int NeedsHeal;
+        int NeedsHeal;
         public bool MonsterHealed;
 
         public Rectangle MonsterHealedLoc;
         public Texture2D HealedMonsterSprite, NoMonsterSprite;
 
         public Color HealElement;
+
+        public string ButtonGuideTxt { get; set; }
+        public Vector2 ButtonGuideLoc { get; set; }
 
         public HealManager(Game game, Player player) : base(game)
         {
@@ -31,11 +33,12 @@ namespace BattleMonsters
 
             g = game;
         }
-
         protected override void LoadContent()
         {
+            ButtonGuideTxt = "T: Heal This Monster | ->: Next Monster | E: Exit";
             MonsterHealedLoc = new Rectangle(g.GraphicsDevice.Viewport.Width / 4, 100, 250, 250);
             NoMonsterSprite = g.Content.Load<Texture2D>("Empty");
+            ButtonGuideLoc = new Vector2(20, g.GraphicsDevice.Viewport.Height - 50);
             base.LoadContent();
         }
 
@@ -45,7 +48,7 @@ namespace BattleMonsters
         
         Creature HealedMonster;
         
-        public void HealMonster()//I'd like to have the player pick which monster they heal but I'm not sure how to get the input to corispond
+        public void HealMonster()
         {
             if (!MonsterHealed)
             {
@@ -97,7 +100,6 @@ namespace BattleMonsters
         }
         #endregion
 
-        //TODO: have arrows swap through all that need heal
         
         public void HealInput()
         {
@@ -118,10 +120,12 @@ namespace BattleMonsters
 
         public bool GetExitHealing() { return ExitHealing; }
 
-        //Should it handel drawing its own vlaues?
-        public override void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch sb)
         {
-            base.Draw(gameTime);
+            sb.DrawString(GamePrintout.font, ButtonGuideTxt, ButtonGuideLoc, HealElement);
+            if (NeedsHeal == 0) { sb.Draw(NoMonsterSprite, MonsterHealedLoc, HealElement); }
+            else { sb.Draw(HealedMonsterSprite, MonsterHealedLoc, HealElement); }
         }
+
     }
 }

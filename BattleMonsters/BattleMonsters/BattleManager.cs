@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace BattleMonsters
 {
     public enum BattleState { Playing, Won, Lost, Forfit }
-    public class BattleManager : DrawableGameComponent
+    public class BattleManager : DrawableGameComponent, IInteractable
     {
         Game game;
         InputHandler input;
@@ -28,11 +28,10 @@ namespace BattleMonsters
 
         bool MoveMade = false;
 
+        public string ButtonGuideTxt { get; set; }
+        public Vector2 ButtonGuideLoc { get; set; }
 
-        //When player or enemy selects there monster it will be set to this
-        //public Creature CPM; //Current Player Monster
-        //public Creature CEM; //Current Enemy Monster
-
+        Color BattleElement;
 
         //Randoms:
         Random RunAttempt = new Random();

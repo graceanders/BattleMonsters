@@ -8,7 +8,7 @@ using System.Text;
 
 namespace BattleMonsters
 {
-    public class MonsterManager : DrawableGameComponent
+    public class MonsterManager : DrawableGameComponent, IInteractable
     {
         Game g;
         InputHandler input;
@@ -42,6 +42,11 @@ namespace BattleMonsters
         public Texture2D EmptySpot;
 
         public Rectangle Starter1Loc, Starter2Loc, Starter3Loc;
+
+        public string ButtonGuideTxt { get; set; }
+        public Vector2 ButtonGuideLoc { get; set; }
+
+        public Color PickStarterElement;
 
         public MonsterManager (Game game, Player player, Enemy enemy) : base(game)
         {
@@ -81,9 +86,12 @@ namespace BattleMonsters
         public Texture2D Starter1Texture, Starter2Texture, Starter3Texture;
         protected override void LoadContent()
         {
+            ButtonGuideTxt = "1: Fire Starter | 2: Water Starter | 3: Earth Starter";
             TeamOneLoc = new Rectangle(200, margin, size, size);
             TeamTwoLoc = new Rectangle(TeamOneLoc.X + size, margin, size, size);
             TeamThreeLoc = new Rectangle(TeamTwoLoc.X + size, margin, size, size);
+
+            ButtonGuideLoc = new Vector2(20, g.GraphicsDevice.Viewport.Height - 50);
 
             EmptySpot = g.Content.Load<Texture2D>("Empty");
 
@@ -188,5 +196,13 @@ namespace BattleMonsters
             Starter2.DrawColor = Color.Transparent;//If this is not here the unpicked stays visible
         }
 
+
+        public void Draw(SpriteBatch sb)
+        {
+            sb.DrawString(GamePrintout.font, ButtonGuideTxt, ButtonGuideLoc, PickStarterElement);
+            sb.Draw(Starter1Texture, new Rectangle((int)Starter1.Location.X, (int)Starter1.Location.Y, Starter1.spriteTexture.Width, Starter1.spriteTexture.Height), PickStarterElement);
+            sb.Draw(Starter2Texture, new Rectangle((int)Starter2.Location.X, (int)Starter2.Location.Y, Starter2.spriteTexture.Width, Starter2.spriteTexture.Height), PickStarterElement);
+            sb.Draw(Starter3Texture, new Rectangle((int)Starter3.Location.X, (int)Starter3.Location.Y, Starter3.spriteTexture.Width, Starter3.spriteTexture.Height), PickStarterElement);
+        }
     }
 }
