@@ -14,6 +14,7 @@
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/EarthJelly.png</File>
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/EarthScorpion.png</File>
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/EarthStarter.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/Empty.png</File>
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/FireBird.png</File>
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/FireDragon.png</File>
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/FireJelly.png</File>
@@ -26,8 +27,11 @@
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/WaterJelly.png</File>
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/WaterScorpion.png</File>
     <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/WaterStarter.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/What.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

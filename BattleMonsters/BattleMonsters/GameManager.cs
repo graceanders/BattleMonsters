@@ -55,16 +55,15 @@ namespace BattleMonsters
 
         SpriteBatch sb;
 
-        Color PickStarterElement, BattleElement, OutOfBattleElement, HealElement, AlwaysShow;
+        Color PickStarterElement, BattleElement, OutOfBattleElement, HealElement, RaffleElement, AlwaysShow;
 
         public int Round;
 
         MonsterManager mm;
         HealManager hm;
+        RaffleManager rm;
 
         BattleManager CurrentBattle;
-
-        Random random;
 
         //bool PickedStarter;
 
@@ -113,8 +112,6 @@ namespace BattleMonsters
             Round = 1;
             
             GameMode = GameMode.PickStarter;
-
-            random = new Random();
 
             #region Text Draw Set
             P_TextLocation = new Vector2(20, 20);
@@ -202,7 +199,7 @@ namespace BattleMonsters
                 case GameMode.OutBattle:
                     OutOfBattleElement = Color.White;
                     BattleElement = Color.Transparent;
-                    ButtonGuideTxt = "B: Battle | H: Heal | T: Manage Team";
+                    ButtonGuideTxt = "B: Battle | H: Heal | R: Raffle | T: Manage Team";
                     break;
                 case GameMode.MonsterSwap:
                     //WhichBattle();
@@ -217,14 +214,19 @@ namespace BattleMonsters
                     ButtonGuideTxt = "T: Heal This Monster | ->: Next Monster | E: Exit";
 
                     if (hm.GetExitHealing()) 
-                    { 
-                        GameMode = GameMode.OutBattle;
-                        HealElement = Color.Transparent;
-                        GamePrintout.TxtPrintOut = "";//Clear
+                    {
+                        ExitMode(HealElement);
                     }
                     break;
                 case GameMode.Raffel:
+                    RaffleElement = Color.White;
+                    rm.MonsterRaffle();
+                    ButtonGuideTxt = "P: Pull from Raffle | E: Exit";
 
+                    if (rm.GetExitRaffle())
+                    {
+                        ExitMode(RaffleElement);
+                    }
                     break;
                 case GameMode.ManageTeam:
 
@@ -334,38 +336,17 @@ namespace BattleMonsters
             }
         }
 
+        void ExitMode(Color color)
+        {
+            GameMode = GameMode.OutBattle;
+            color = Color.Transparent;
+            GamePrintout.TxtPrintOut = "";
+        }
+
         //TODO: will need testing but I think Raffle is pretty solid!!
         #region Raffle
 
-        int RaffleCost = 20;
-        bool PullFromRaffel;
-        Creature MonsterPulled;
-        public void MonsterRaffle()
-        {
-            GamePrintout.TxtPrintOut = "Welcome to the Raffle!\n";
-            if (P.Coins >= RaffleCost)
-            {
-                GamePrintout.TxtPrintOut += "Would you like to pull from the Raffle?\n1: Yes or 2: No";
-                if (PullFromRaffel)
-                {
-                    PullMonster();
-                }
-                else { GamePrintout.TxtPrintOut = "Not a problem come again soon!"; }
-            }
-            else { GamePrintout.TxtPrintOut += $"You do not have enough to participate in the Raffle come again when you have {RaffleCost} Coins"; }
-        }
-
-        void PullMonster()
-        {
-            P.Coins -= RaffleCost;
-            int WhichMonster = random.Next(0, mm.Monsters.Count);//Sets a Random between the bounds of the Monters one can get
-            MonsterPulled = mm.Monsters[WhichMonster];//Sets the Monster gotten locally
-            MonsterPulled.GetStats(Round);//Gets there Stats
-
-            GamePrintout.TxtPrintOut = $"You pulled a {nameof(MonsterPulled)} named {MonsterPulled.Name}\nStats:\nHP: {MonsterPulled.HP} | ATK Score: {MonsterPulled.ATKScore} | DEF: {MonsterPulled.DEFScore}";
-
-            P.AddMonsterToAllMonsters(MonsterPulled);
-        }
+        
 
         #endregion
         void BattleReady()
@@ -410,6 +391,13 @@ namespace BattleMonsters
                     GamePrintout.TxtPrintOut = "You have select to Heal your Monsters!";
                     GameMode = GameMode.Healing;
                 }
+                if (input.KeyboardState.WasKeyPressed(Keys.R))
+                {
+                    rm = new RaffleManager(g, P, mm, Round);
+                    rm.PullFromRaffel = false;
+                    rm.ExitRaffle = false;
+                    GameMode = GameMode.Raffel;
+                }
                 if (input.KeyboardState.WasKeyPressed(Keys.T))
                 {
                     //Manage team
@@ -431,6 +419,10 @@ namespace BattleMonsters
             if(GameMode == GameMode.Healing)
             {
                 hm.HealInput();
+            }
+            if(GameMode == GameMode.Raffel)
+            {
+                rm.RaffleInput();
             }
         }
 
@@ -497,6 +489,20 @@ namespace BattleMonsters
             if (GameMode == GameMode.InBattle) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, BattleElement); }
             if(GameMode == GameMode.MonsterSwap) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, BattleElement); }
             if(GameMode == GameMode.Healing) { sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, HealElement); }
+            if (GameMode == GameMode.Raffel) 
+            { 
+                sb.DrawString(font, ButtonGuideTxt, ButtonGuidLoc, RaffleElement);
+                if (rm.PulledMonsterSprite == null)
+                {
+                    sb.Draw(rm.WhatMonster, rm.MonsterPulledLoc, RaffleElement);
+                }
+                else
+                {
+                    sb.Draw(rm.PulledMonsterSprite, rm.MonsterPulledLoc, RaffleElement);
+                }
+                
+            
+            }
             #endregion
 
             sb.End();

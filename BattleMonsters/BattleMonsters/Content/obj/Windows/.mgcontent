@@ -4,6 +4,8 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/Empty.png</File>
+    <File>C:/Users/grace/source/repos/BattleMonsters/BattleMonsters/BattleMonsters/Content/What.png</File>
     <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/MarsBackground.png</File>
     <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/MarsBackground.jpg</File>
     <File>C:/src/C#/BattleMonsters/BattleMonsters/Content/BigFont.spritefont</File>

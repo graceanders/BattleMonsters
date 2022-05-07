@@ -8,7 +8,7 @@ using System.Text;
 
 namespace BattleMonsters
 {
-    class MonsterManager : DrawableGameComponent
+    public class MonsterManager : DrawableGameComponent
     {
         Game g;
         InputHandler input;

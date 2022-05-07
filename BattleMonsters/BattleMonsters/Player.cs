@@ -29,7 +29,7 @@ namespace BattleMonsters
         {
             if (CheckIfTeamIsFull() == true)
             {
-                GamePrintout.TxtPrintOut += "\nYour Team is full the Monster has been added to your collection of Monsters";
+                GamePrintout.TxtPrintOut += "\nYour Team is full\nThe Monster has been added to your collection";
                 this.AllMonsters.Add(c);
             }
             else
