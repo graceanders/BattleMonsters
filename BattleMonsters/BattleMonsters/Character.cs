@@ -33,6 +33,7 @@ namespace BattleMonsters
 
         public int CalculateTeamHP()
         {
+            TeamHP = 0;
             foreach(Creature monster in Team)
             {
                 TeamHP += monster.HP;

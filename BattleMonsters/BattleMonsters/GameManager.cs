@@ -164,12 +164,6 @@ namespace BattleMonsters
             CheckGameMode();
             CheckGameState();
             CheckGameDifficulty();
-            if(CurrentBattle != null) 
-            {
-                CurrentBattle.CheckBattleState();
-                if (CurrentBattle.BattleOver == true) { GetBattleResults(); }
-
-            }
 
             UpdateGameInfoTxt();
 
@@ -178,14 +172,8 @@ namespace BattleMonsters
             base.Update(gameTime);
         }
 
-        public void GetBattleResults()
-        {
-            GamePrintout.TxtPrintOut = CurrentBattle.ReturnResults();
-            CurrentBattle.BattleOver = false;
-            if (CurrentBattle.Won) { Round++; }
-        }
 
-
+        bool BattleStarted;
         #region State Changes
         public void CheckGameMode()
         {
@@ -202,10 +190,20 @@ namespace BattleMonsters
                     }
                     break;
                 case GameMode.InBattle:
+                    if (!BattleStarted)
+                    {
+                        WhichBattle();
+                    }
                     BattleElement = Color.White;
                     OutOfBattleElement = Color.Transparent;
                     ButtonGuideTxt = "A: Attack | R: Run";
-                    WhichBattle();
+
+                    CurrentBattle.CheckBattleState();
+                    if (CurrentBattle.BattleOver)
+                    {
+                        //GetBattleResults();
+                        GamePrintout.TxtPrintOut = CurrentBattle.BattleResults();
+                    }
                     break;
                 case GameMode.OutBattle:
                     OutOfBattleElement = Color.White;
@@ -269,6 +267,7 @@ namespace BattleMonsters
 
         public void WhichBattle()
         {
+            BattleStarted = true;
             if (Round == 1)
             {
                 CurrentBattle = new BattleManager(g, P, E);
@@ -365,6 +364,7 @@ namespace BattleMonsters
                 if (input.KeyboardState.WasKeyPressed(Keys.B))
                 {
                     //Battle
+                    BattleStarted = false;
                     GamePrintout.TxtPrintOut = $"Round {Round} shall commense!";
                     if(P.Team.Count == 0)
                     {
