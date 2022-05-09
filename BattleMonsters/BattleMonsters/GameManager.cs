@@ -401,7 +401,7 @@ namespace BattleMonsters
             }
             if(GameMode == GameMode.MonsterSwap)
             {
-                ////Dont love this 
+                //Dont love this 
                 if(CurrentBattle == null) { WhichBattle(); }
                     CurrentBattle.MonsterSwapInput();
             }

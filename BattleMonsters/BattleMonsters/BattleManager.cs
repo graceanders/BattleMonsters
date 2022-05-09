@@ -5,16 +5,17 @@ using Microsoft.Xna.Framework;
 using MonoGameLibrary.Util;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using System.Threading;
 
 namespace BattleMonsters
 {
-    public enum BattleState { Playing, Won, Lost, Forfit }
+    public enum BattleState { Playing, Won, Lost, Forfit}
     public class BattleManager : DrawableGameComponent, IInteractable
     {
         Game game;
         InputHandler input;
 
-        public BattleState BattleState { get; set; }
+        private BattleState BattleState { get; set; }
         public GameDifficulty GameDifficulty { get; }
 
         public GameMode GameMode { get; }
@@ -100,11 +101,14 @@ namespace BattleMonsters
             return results;
         }
 
-        public override void Update(GameTime gametime)
+
+        void CallPause()
         {
-            base.Update(gametime);
+            Pause = true;
+            GamePrintout.TxtPrintOut += $"\n\nThe Enemy will go in 5 seconds";
         }
 
+        bool Pause;
         bool RoundCompleted = false;
         public void FullTurn(bool Attack)
         {
@@ -126,8 +130,19 @@ namespace BattleMonsters
                     Run(P);
                 }
 
-                if (BattleState == BattleState.Playing) { EnemyTurn(); }
-                Turn++;
+                if (BattleState == BattleState.Playing) 
+                {
+                    //CallPause();
+                    //while (!Pause)
+                    //{
+                    //    Thread.Sleep(5000);
+                    //    Pause = true;
+                    //}
+                    EnemyTurn();
+                    Turn++;
+
+                }
+                
             }
             else
             {
@@ -135,6 +150,7 @@ namespace BattleMonsters
             }
 
         }
+
 
         double Damage;
         bool PlayerHasDamaged = false;
@@ -150,6 +166,7 @@ namespace BattleMonsters
         int Decision;
         public void EnemyTurn()
         {
+            CallPause();
             Decision = WillRun.Next(0, 100);
             if(Decision > 50) { CheckProbablilityOfLoss(); }//Need to have the Enemy not forfit every time
 
@@ -315,10 +332,6 @@ namespace BattleMonsters
                 if (input.KeyboardState.WasKeyPressed(Keys.R))
                 {
                     this.FullTurn(false);//Run
-                }
-                if (input.KeyboardState.WasKeyPressed(Keys.Space))
-                {
-                    //TODO: Build out a continue to act as a pause between player and enemy turns
                 }
             }
         }
