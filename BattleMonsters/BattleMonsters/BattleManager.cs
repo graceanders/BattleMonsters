@@ -64,12 +64,10 @@ namespace BattleMonsters
                     BattleOver = false;
                     break;
                 case BattleState.Won:
-                    CheckCoinsGained();
                     Won = true;
                     BattleOver = true;
                     break;
                 case BattleState.Lost:
-                    CheckCoinsLost();
                     Won = false;
                     BattleOver = true;
                     break;
@@ -89,11 +87,13 @@ namespace BattleMonsters
             if(BattleState == BattleState.Won)
             {
                 results = $"You defeated Enemy {E.Name}\nYou can now progress to the next Round!";
+                CheckCoinsGained();
             }
 
             if(BattleState == BattleState.Lost)
             {
                 results = $"Enemy {E.Name} defeated you!\nTo progress to the next Round you must defeat the Enemy!";
+                CheckCoinsLost();
             }
 
             if (BattleState == BattleState.Forfit)
@@ -120,7 +120,7 @@ namespace BattleMonsters
             {
                 BattleState = BattleState.Playing;
 
-                //CheckLife();
+                CheckLife();
 
                 if (Attack)//If the player desides to attack
                 {
@@ -181,6 +181,7 @@ namespace BattleMonsters
 
         public void TurnCompleted()
         {
+            PlayerHasDamaged = EnemyHasDamaged = false;
             Turn++;
             GamePrintout.TxtPrintOut = "";
             if (!CheckMonsterStatus())
@@ -215,7 +216,7 @@ namespace BattleMonsters
                 if (!PlayerHasDamaged) 
                 {
                     RemainingHp = WhichMonster.HP - Damage;
-                    if (RemainingHp < 0) { WhichMonster.HP = 0; }
+                    if (RemainingHp <= 0) { WhichMonster.HP = 0; }
                     else { WhichMonster.HP -= Damage; }
                     
                 }
@@ -226,7 +227,7 @@ namespace BattleMonsters
                 if (!EnemyHasDamaged) 
                 {
                     RemainingHp = WhichMonster.HP - Damage;
-                    if (RemainingHp < 0) { WhichMonster.HP = 0; }
+                    if (RemainingHp <= 0) { WhichMonster.HP = 0; }
                     else { WhichMonster.HP -= Damage; }
                 }
                 EnemyHasDamaged = true;
@@ -303,7 +304,6 @@ namespace BattleMonsters
             if (WhichCharacter == E)
             {
                 PlayerDid = false;
-                
             }
             if (WhichCharacter == P)
             {

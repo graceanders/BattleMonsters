@@ -16,17 +16,20 @@ namespace BattleMonsters
             int WhichName = random.Next(0, EnemyNames.Length);
             this.Name = EnemyNames[WhichName];
             this.CombindedATK = CalculateCombindedATK();
-            this.Level = CalculateLevel();
-
-            this.Coins = CalculateCoins(Level);
         }
 
         int CoinPerLevel = 20;
         int value;
         public int CalculateCoins(int level)
         {
-            value = CoinPerLevel * level;
+            value = CoinPerLevel;
             return value;
+        }
+
+        public void CalculateLevelAndCoins()
+        {
+            this.Level = CalculateLevel();
+            this.Coins = CalculateCoins(Level);
         }
     }
 }

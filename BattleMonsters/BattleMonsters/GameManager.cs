@@ -41,6 +41,7 @@ namespace BattleMonsters
 
         public GameDifficulty GameDifficulty { get; set; }
 
+
         public Player P;
         public Enemy E;
         //public Creature CPM, CEM;
@@ -164,7 +165,7 @@ namespace BattleMonsters
             CheckGameMode();
             CheckGameState();
             CheckGameDifficulty();
-
+            if(CurrentBattle != null) { CurrentBattle.CheckBattleState(); }
             UpdateGameInfoTxt();
 
             HandleInput(gameTime);
@@ -172,6 +173,12 @@ namespace BattleMonsters
             base.Update(gameTime);
         }
 
+        public void GetBattleResults()
+        {
+            GamePrintout.TxtPrintOut = CurrentBattle.BattleResults();
+            //CurrentBattle.BattleOver = false;
+            if (CurrentBattle.Won) { Round++; }
+        }
 
         bool BattleStarted;
         #region State Changes
@@ -190,20 +197,22 @@ namespace BattleMonsters
                     }
                     break;
                 case GameMode.InBattle:
+
                     if (!BattleStarted)
                     {
                         WhichBattle();
                     }
+                    
                     BattleElement = Color.White;
                     OutOfBattleElement = Color.Transparent;
                     ButtonGuideTxt = "A: Attack | R: Run";
 
-                    CurrentBattle.CheckBattleState();
-                    if (CurrentBattle.BattleOver)
+                    if (CurrentBattle.BattleOver == true)
                     {
-                        //GetBattleResults();
+                        GameMode = GameMode.OutBattle;
                         GamePrintout.TxtPrintOut = CurrentBattle.BattleResults();
                     }
+
                     break;
                 case GameMode.OutBattle:
                     OutOfBattleElement = Color.White;
@@ -270,6 +279,7 @@ namespace BattleMonsters
             BattleStarted = true;
             if (Round == 1)
             {
+                E.CalculateLevelAndCoins();
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 2)
