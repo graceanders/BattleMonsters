@@ -56,6 +56,16 @@ namespace BattleMonsters
 
         }
 
+        Creature FreePulledMonster;
+        public Creature PullFreeMonster()
+        {
+            int WhichMonster = random.Next(0, mm.Monsters.Count);
+            FreePulledMonster = mm.Monsters[WhichMonster];
+            FreePulledMonster.GetStats(Round);
+
+            return FreePulledMonster;
+        }
+
         void PullMonster()
         {
             PullFromRaffel = true;

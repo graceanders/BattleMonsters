@@ -159,21 +159,30 @@ namespace BattleMonsters
             P.Team.Add(AddToTeam);
         }
 
-        int CalculateHeightMargine(Creature C) { return (C.spriteTexture.Height / 2); }
-        int CalculateWidthMargine(Creature C) { return (C.spriteTexture.Width / 2); }
-
         public override void Update(GameTime gameTime)
         {
             CheckGameMode();
             CheckGameState();
             CheckGameDifficulty();
-            if(CurrentBattle != null) { CheckBattleState(); }
+            if(CurrentBattle != null) 
+            {
+                CurrentBattle.CheckBattleState();
+                if (CurrentBattle.BattleOver == true) { GetBattleResults(); }
+
+            }
 
             UpdateGameInfoTxt();
 
             HandleInput(gameTime);
 
             base.Update(gameTime);
+        }
+
+        public void GetBattleResults()
+        {
+            GamePrintout.TxtPrintOut = CurrentBattle.ReturnResults();
+            CurrentBattle.BattleOver = false;
+            if (CurrentBattle.Won) { Round++; }
         }
 
 
@@ -203,7 +212,6 @@ namespace BattleMonsters
                     BattleElement = Color.Transparent;
                     break;
                 case GameMode.MonsterSwap:
-                    //WhichBattle();
                     BattleElement = Color.White;
                     OutOfBattleElement = Color.Transparent;
                     ButtonGuideTxt = "L: Lock in Monster 1: Swap to First | 2: Swap to Second | 3: Swap to Third";
@@ -261,60 +269,44 @@ namespace BattleMonsters
 
         public void WhichBattle()
         {
-
             if (Round == 1)
             {
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 2)
             {
-                //Set up other necesarry values
-                CurrentBattle = new BattleManager(this.Game, this.P, this.E);
+                RandomEnemyMonster();
+                CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 3)
             {
-                //Set up other necesarry values
-                CurrentBattle = new BattleManager(this.Game, this.P, this.E);
+                RandomEnemyMonster();
+                CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 4)
             {
-                //Set up other necesarry values
-                CurrentBattle = new BattleManager(this.Game, this.P, this.E);
+                RandomEnemyMonster();
+                CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 5)
             {
-                //Set up other necesarry values
-                CurrentBattle = new BattleManager(this.Game, this.P, this.E);
+                RandomEnemyMonster();
+                CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 6)
             {
-                //Set up other necesarry values
-                CurrentBattle = new BattleManager(this.Game, this.P, this.E);
+                RandomEnemyMonster();
+                CurrentBattle = new BattleManager(g, P, E);
             }
 
             CurrentBattle.Turn = 1;
         }
 
-
-        //TODO Should be in Battle Manager
-        public void CheckBattleState()
+        void RandomEnemyMonster()
         {
-            switch (CurrentBattle.BattleState)
-            {
-                case BattleState.Playing:
-
-                    break;
-                case BattleState.Won:
-                    Round++;
-                    break;
-                case BattleState.Lost:
-
-                    break;
-                case BattleState.Forfit:
-
-                    break;
-            }
+            E.CurrentMonster = rm.PullFreeMonster();
         }
+
 
         int EasyDifficultyThreshold = 2;
         int MediumDifficultyThreshold = 4;

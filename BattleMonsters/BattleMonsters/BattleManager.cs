@@ -22,8 +22,6 @@ namespace BattleMonsters
         Player P;
         Enemy E;
 
-        Vector2 CPMLocation, CEMLocation;
-
         public int Turn;
 
         bool MoveMade = false;
@@ -35,16 +33,13 @@ namespace BattleMonsters
 
         //Randoms:
         Random RunAttempt = new Random();
+        Random WillRun = new Random();
 
         bool PlayerDid;
-
-        int margin = 10;
 
         public bool LockedIn;
 
         //Allow the enemy AI to check CPM's type and try to swith to a monster that beats it?
-
-        //this would requre a new Battle Manager to be created for every new enemy
 
 
         public BattleManager(Game G, Player P, Enemy E) : base(G)
@@ -57,18 +52,52 @@ namespace BattleMonsters
 
             Turn = 1;
 
-
             this.BattleState = BattleState.Playing;
         }
 
-        protected override void LoadContent()
+        public bool Won, BattleOver;
+        public void CheckBattleState()
         {
-            base.LoadContent();
+            switch (BattleState)
+            {
+                case BattleState.Playing:
+                    BattleOver = false;
+                    break;
+                case BattleState.Won:
+                    Won = true;
+                    BattleOver = true;
+                    break;
+                case BattleState.Lost:
+                    Won = false;
+                    BattleOver = true;
+                    break;
+                case BattleState.Forfit:
+                    BattleOver = true;
+                    Won = false;
+                    break;
+            }
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
+        string results;
+        public string ReturnResults() 
+        { 
+            if(BattleState == BattleState.Won)
+            {
+                results = $"You defeated Enemy {E.Name}\nYou can now progress to the next Round!";
+            }
+
+            if(BattleState == BattleState.Lost)
+            {
+                results = $"Enemy {E.Name} defeated you!\nTo progress to the next Round you must defeat the Enemy!";
+            }
+
+            if (BattleState == BattleState.Forfit)
+            {
+                if (PlayerDid) { results = "You ran before defeating the Enemy\nTo progress to the next Round you must defeat the Enemy!"; }
+                if (PlayerDid) { results = "You ran before defeating the Enemy\nTo progress to the next Round you must defeat the Enemy!"; }
+            }
+
+            return results;
         }
 
         public override void Update(GameTime gametime)
@@ -76,10 +105,41 @@ namespace BattleMonsters
             base.Update(gametime);
         }
 
+        bool RoundCompleted = false;
+        public void FullTurn(bool Attack)
+        {
+            MoveMade = true;
+            if (!RoundCompleted)
+            {
+                BattleState = BattleState.Playing;
+
+                CheckLife();
+
+                if (Attack)//If the player desides to attack
+                {
+                    GamePrintout.TxtPrintOut = "You have decided to Attack!";
+                    PlayerTurn();
+                }
+                else
+                {
+                    GamePrintout.TxtPrintOut = "You have decided to Run!";
+                    Run(P);
+                }
+
+                if (BattleState == BattleState.Playing) { EnemyTurn(); }
+                Turn++;
+            }
+            else
+            {
+                TurnCompleted();
+            }
+
+        }
+
         double Damage;
         bool PlayerHasDamaged = false;
         bool EnemyHasDamaged = false;
-        public void PlayerRound()
+        public void PlayerTurn()
         {
             Damage = P.CurrentMonster.Attack(P.CurrentMonster.ATKScore, E.CurrentMonster.DEFScore);
 
@@ -87,9 +147,12 @@ namespace BattleMonsters
             GamePrintout.TxtPrintOut += $"\n{P.CurrentMonster.Name} Damaged {E.CurrentMonster.Name} for {(int)Damage} HP points\n{E.CurrentMonster.Name}'s HP is now at {E.CurrentMonster.HP}";
         }
 
-        public void EnemyRound()
+        int Decision;
+        public void EnemyTurn()
         {
-            CheckProbablilityOfLoss();
+            Decision = WillRun.Next(0, 100);
+            if(Decision > 50) { CheckProbablilityOfLoss(); }//Need to have the Enemy not forfit every time
+
             //OptomizeEnemySwap(); //Potentially build out
             if(BattleState == BattleState.Playing)
             {
@@ -100,6 +163,18 @@ namespace BattleMonsters
             RoundCompleted = true;
             GamePrintout.TxtPrintOut += "\nRound Completed";
         }
+
+        public void TurnCompleted()
+        {
+            CheckLife();
+            if (BattleState == BattleState.Playing)
+            {
+                MoveMade = false;
+                RoundCompleted = false;
+            }
+        }
+
+
 
         void DamageMonster(Creature WhichMonster, int Damage)
         {
@@ -113,33 +188,6 @@ namespace BattleMonsters
                 if (!EnemyHasDamaged) { WhichMonster.HP -= Damage; }
                 EnemyHasDamaged = true;
             }
-        }
-
-        bool RoundCompleted = false;
-        public void Round(bool Attack)
-        {
-            MoveMade = true;
-            if (!RoundCompleted)
-            {
-                BattleState = BattleState.Playing;
-
-                CheckLife();
-
-                if (Attack)//If the player desides to attack
-                {
-                    GamePrintout.TxtPrintOut = "You have decided to Attack!";
-                    PlayerRound();
-                }
-                else
-                {
-                    GamePrintout.TxtPrintOut = "You have decided to Run!";
-                    Run(P);
-                }
-
-                if (BattleState == BattleState.Playing) { EnemyRound(); }
-                Turn++;
-            }
-
         }
 
         public void CheckProbablilityOfLoss()
@@ -159,6 +207,8 @@ namespace BattleMonsters
                 //allow the enemy to swap there monster for one that is better equipt at fighing the players monster
             }
         }
+
+        #region Run
 
         int RunSucessRate;
         public void Run(Character WhichCharacter)
@@ -193,6 +243,8 @@ namespace BattleMonsters
             return PlayerDid;
         }
 
+        #endregion
+
         int PlayerCombinedHP, EnemyCombinedHP;
         public void CheckLife()
         {
@@ -209,17 +261,7 @@ namespace BattleMonsters
             }
         }
 
-        public void Lost(Character WhichCharacter)
-        {
-            if (WhichCharacter == E)
-            {
-                //Enemy lost next battle would be opened in the game
-            }
-            if (WhichCharacter == P)
-            {
-                //Player lost next battle would not be open
-            }
-        }
+        #region Coins
 
         public void CheckCoinsLost()
         {
@@ -227,14 +269,17 @@ namespace BattleMonsters
             if (GameDifficulty == GameDifficulty.Easy)
             {
                 P.Coins -= (P.Coins / 3); //Looses a 1/3
+                GamePrintout.TxtPrintOut += "\nYou lost a 1/3 of your Coins";
             }
             if (GameDifficulty == GameDifficulty.Medium)
             {
                 P.Coins -= ((P.Coins / 3) * 2); //Looses 2/3
+                GamePrintout.TxtPrintOut += "\nYou lost a 2/3 of your Coins";
             }
             if (GameDifficulty == GameDifficulty.Hard) //Looses all
             {
                 P.Coins -= P.Coins;
+                GamePrintout.TxtPrintOut += "\nYou lost all of your Coins";
             }
         }
 
@@ -253,20 +298,27 @@ namespace BattleMonsters
             {
                 P.Coins += E.Coins; // Gains all of Enemies Coins
             }
+            GamePrintout.TxtPrintOut += $"\nYou gaid {E.Coins / 3} Coins from the Enemy";
 
         }
+        #endregion
 
+        #region Input
         public void InBattleInput()
         {
             if (!MoveMade)
             {
                 if (input.KeyboardState.WasKeyPressed(Keys.A))
                 {
-                    this.Round(true);//Attack
+                    this.FullTurn(true);//Attack
                 }
                 if (input.KeyboardState.WasKeyPressed(Keys.R))
                 {
-                    this.Round(false);//Run
+                    this.FullTurn(false);//Run
+                }
+                if (input.KeyboardState.WasKeyPressed(Keys.Space))
+                {
+                    //TODO: Build out a continue to act as a pause between player and enemy turns
                 }
             }
         }
@@ -314,6 +366,7 @@ namespace BattleMonsters
                 GamePrintout.TxtPrintOut = $"You have selected {P.CurrentMonster.Name}\nThe Battle will commense!";
             }
         }
+        #endregion
 
     }
 }
