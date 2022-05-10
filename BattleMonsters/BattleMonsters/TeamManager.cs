@@ -53,7 +53,8 @@ namespace BattleMonsters
 
             WhichAllMonster = WhichTeamMember = 0;
             WhichTeamMember = 0;
-            TeamEditSprite = P.Team[0].spriteTexture;
+            if(P.Team.Count != 0) { TeamEditSprite = P.Team[0].spriteTexture; }
+            else { TeamEditSprite = P.AllMonsters[0].spriteTexture; }
 
             base.LoadContent();
         }

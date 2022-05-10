@@ -71,7 +71,7 @@ namespace BattleMonsters
             CPMLoc = new Rectangle((int)PMLocation.X, (int)PMLocation.Y, 350, 350);
             CEMLoc = new Rectangle((int)EMLocation.X, (int)EMLocation.Y, 350, 350);
 
-            TurntxtLoc = new Vector2(game.GraphicsDevice.Viewport.Width - 10, 70);
+            TurntxtLoc = new Vector2(game.GraphicsDevice.Viewport.Width/ 2 - 25, 70);
 
             PM_HPLocation = new Vector2(20, 80);
             E_TextLocation = new Vector2(game.GraphicsDevice.Viewport.Width - 250, 20);
@@ -359,6 +359,7 @@ namespace BattleMonsters
             {
                 GamePrintout.TxtPrintOut += $"\nYou sucessfully Ran";
                 PlayerDid = true;
+                TurnOver = true;
                 BattleState = BattleState.Forfit;
             }
         }

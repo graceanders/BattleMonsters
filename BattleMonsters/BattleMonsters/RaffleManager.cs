@@ -57,7 +57,7 @@ namespace BattleMonsters
         }
 
         Creature FreePulledMonster;
-        public Creature PullFreeMonster()
+        public Creature PullFreeMonster(int Round)
         {
             int WhichMonster = random.Next(0, mm.Monsters.Count);
             FreePulledMonster = mm.Monsters[WhichMonster];

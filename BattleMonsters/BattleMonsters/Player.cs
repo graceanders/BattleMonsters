@@ -7,7 +7,7 @@ namespace BattleMonsters
     public class Player : Character
     {
         int StartingLevel = 1;
-        int StartingCoins = 5;
+        int StartingCoins = 25;
 
         //public Team Team;
 

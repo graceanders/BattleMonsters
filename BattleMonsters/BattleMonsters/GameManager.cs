@@ -125,6 +125,7 @@ namespace BattleMonsters
         void SetUpTestingValues()
         {
             P.Coins = 100;
+            Round = 1;
 
             //Healing
             Creature HealableMonster;
@@ -165,6 +166,7 @@ namespace BattleMonsters
         void Replay()
         {
             LoadContent();
+            GameMode = GameMode.PickStarter;
         }
 
         bool BattleStarted;
@@ -218,6 +220,7 @@ namespace BattleMonsters
                     ButtonGuideTxt = "B: Battle | H: Heal | R: Raffle | T: Manage Team";
                     break;
                 case GameMode.MonsterSwap:
+                    P.CurrentMonster = P.Team[0];
                     BattleElement = Color.White;
                     OutOfBattleElement = Color.Transparent;
                     ButtonGuideTxt = "L: Lock in Monster 1: Swap to First | 2: Swap to Second | 3: Swap to Third";
@@ -269,37 +272,37 @@ namespace BattleMonsters
             BattleStarted = true;
             if (Round == 1)
             {
-                E.CalculateLevelAndCoins();
+                E.CalculateLevelAndCoins(Round);
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 2)
             {
                 RandomEnemyMonster();
-                E.CalculateLevelAndCoins();
+                E.CalculateLevelAndCoins(Round);
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 3)
             {
                 RandomEnemyMonster();
-                E.CalculateLevelAndCoins();
+                E.CalculateLevelAndCoins(Round);
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 4)
             {
                 RandomEnemyMonster();
-                E.CalculateLevelAndCoins();
+                E.CalculateLevelAndCoins(Round);
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 5)
             {
                 RandomEnemyMonster();
-                E.CalculateLevelAndCoins();
+                E.CalculateLevelAndCoins(Round);
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 6)
             {
                 RandomEnemyMonster();
-                E.CalculateLevelAndCoins();
+                E.CalculateLevelAndCoins(Round);
                 CurrentBattle = new BattleManager(g, P, E);
             }
 
@@ -309,7 +312,7 @@ namespace BattleMonsters
         void RandomEnemyMonster()
         {
             if(rm == null) { rm = new RaffleManager(g, P, mm, Round); }
-            E.CurrentMonster = rm.PullFreeMonster();
+            E.CurrentMonster = rm.PullFreeMonster(Round);
             E.Team.Add(E.CurrentMonster);
         }
 
@@ -352,6 +355,7 @@ namespace BattleMonsters
             {
                 if (input.KeyboardState.WasKeyPressed(Keys.B))
                 {
+                    GameMode = GameMode.MonsterSwap;
                     //Battle
                     BattleStarted = false;
                     GamePrintout.TxtPrintOut = $"Round {Round} shall commense!";
@@ -360,7 +364,6 @@ namespace BattleMonsters
                         P.Team.Add(P.CurrentMonster);
                         E.Team.Add(E.CurrentMonster);
                     }
-                    GameMode = GameMode.MonsterSwap;
                 }
                 if (input.KeyboardState.WasKeyPressed(Keys.H))
                 {
