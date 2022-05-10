@@ -29,11 +29,18 @@ namespace BattleMonsters
         public string ButtonGuideTxt { get; set; }
         public Vector2 ButtonGuideLoc { get; set; }
 
-        Color BattleElement;
-
         //Randoms:
         Random RunAttempt = new Random();
         Random WillRun = new Random();
+
+        public Color BattleElement;
+
+        //DrawValues
+        public Rectangle CPMLoc, CEMLoc;
+        public Vector2 PMLocation, EMLocation;
+
+        Vector2 TurntxtLoc;
+        Vector2 PM_HPLocation, E_TextLocation, EM_HPLocation;
 
         bool PlayerDid;
 
@@ -41,6 +48,7 @@ namespace BattleMonsters
 
         //Allow the enemy AI to check CPM's type and try to swith to a monster that beats it?
 
+        int margin = 50;
         public BattleManager(Game G, Player P, Enemy E) : base(G)
         {
             input = (InputHandler)G.Services.GetService(typeof(IInputHandler));
@@ -50,7 +58,28 @@ namespace BattleMonsters
             this.E = E;
 
             this.BattleState = BattleState.Playing;
-            
+            BattleElement = Color.White;
+
+            LoadContent();
+        }
+
+        protected override void LoadContent()
+        {
+            PMLocation = new Vector2(margin, game.GraphicsDevice.Viewport.Height - 400);
+            EMLocation = new Vector2((game.GraphicsDevice.Viewport.Width - E.CurrentMonster.spriteTexture.Width) - margin, game.GraphicsDevice.Viewport.Height - 400);
+
+            CPMLoc = new Rectangle((int)PMLocation.X, (int)PMLocation.Y, 350, 350);
+            CEMLoc = new Rectangle((int)EMLocation.X, (int)EMLocation.Y, 350, 350);
+
+            TurntxtLoc = new Vector2(game.GraphicsDevice.Viewport.Width - 10, 70);
+
+            PM_HPLocation = new Vector2(20, 80);
+            E_TextLocation = new Vector2(game.GraphicsDevice.Viewport.Width - 250, 20);
+            EM_HPLocation = new Vector2(game.GraphicsDevice.Viewport.Width - 250, 80);
+
+            ButtonGuideLoc = new Vector2(20, 1025);
+
+            base.LoadContent();
         }
 
 
@@ -87,19 +116,19 @@ namespace BattleMonsters
             if(BattleState == BattleState.Won)
             {
                 results = $"You defeated Enemy {E.Name}\nYou can now progress to the next Round!";
-                CheckCoinsGained();
+                results += $"\n{CheckCoinsGained()}";
             }
 
             if(BattleState == BattleState.Lost)
             {
                 results = $"Enemy {E.Name} defeated you!\nTo progress to the next Round you must defeat the Enemy!";
-                CheckCoinsLost();
+                results += $"\n{CheckCoinsLost()}";
             }
 
             if (BattleState == BattleState.Forfit)
             {
                 if (PlayerDid) { results = "You ran before defeating the Enemy\nTo progress to the next Round you must defeat the Enemy!"; }
-                if (PlayerDid) { results = "You ran before defeating the Enemy\nTo progress to the next Round you must defeat the Enemy!"; }
+                if (!PlayerDid) { results = "The Enemy ran before you could defeat them\nTo progress to the next Round you must defeat the Enemy!"; }
             }
 
             return results;
@@ -164,16 +193,21 @@ namespace BattleMonsters
      
         public void EnemyTurn()
         {
-            if (!CheckProbablilityOfLoss())
+            if (!E.CurrentMonster.Dead)
             {
-                //OptomizeEnemySwap(); //Potentially build out
-                if (BattleState == BattleState.Playing)
+                if (!CheckProbablilityOfLoss())
                 {
-                    Damage = E.CurrentMonster.Attack(E.CurrentMonster.ATKScore, P.CurrentMonster.DEFScore);
-                    DamageMonster(P.CurrentMonster, (int)Damage);
-                    GamePrintout.TxtPrintOut += $"\n{E.CurrentMonster.Name} Damaged {P.CurrentMonster.Name} for {(int)Damage} HP points\n{P.CurrentMonster.Name}'s HP is now at {P.CurrentMonster.HP}";
+                    //OptomizeEnemySwap(); //Potentially build out
+                    if (BattleState == BattleState.Playing)
+                    {
+                        Damage = E.CurrentMonster.Attack(E.CurrentMonster.ATKScore, P.CurrentMonster.DEFScore);
+                        DamageMonster(P.CurrentMonster, (int)Damage);
+                        GamePrintout.TxtPrintOut += $"\n{E.CurrentMonster.Name} Damaged {P.CurrentMonster.Name} for {(int)Damage} HP points\n{P.CurrentMonster.Name}'s HP is now at {P.CurrentMonster.HP}";
+                    }
                 }
             }
+            else { GamePrintout.TxtPrintOut += $"\n{E.Name}'s Monster has been Defeated!"; }
+            
             GamePrintout.TxtPrintOut += "\nTurn Completed";
             TurnOver = true;
             
@@ -184,7 +218,9 @@ namespace BattleMonsters
             PlayerHasDamaged = EnemyHasDamaged = false;
             Turn++;
             GamePrintout.TxtPrintOut = "";
-            if (!CheckMonsterStatus())
+
+            //Check Team Status
+            if (!CheckMonsterStatus(P))
             {
                 GamePrintout.TxtPrintOut += "\nAll of your Monsters are still standing!";
             }
@@ -195,15 +231,24 @@ namespace BattleMonsters
                     GamePrintout.TxtPrintOut += $"\n{P.Team[0].Name} is now up";
                     P.CurrentMonster = P.Team[0];
                 }
-                
             }
-            
+
+            if (CheckMonsterStatus(E))
+            {
+                if (E.Team.Count != 0)
+                {
+                    GamePrintout.TxtPrintOut += $"\n{E.Team[0].Name} is now up";
+                    P.CurrentMonster = P.Team[0];
+                }
+            }
+
             CheckLife();
             if (BattleState == BattleState.Playing)
             {
                 MoveMade = false;
                 TurnOver = false;
                 GamePrintout.TxtPrintOut += $"\n{E.Name} is still standing\nWhat's your next move?";
+
             }
         }
 
@@ -213,25 +258,25 @@ namespace BattleMonsters
         {
             if(WhichMonster == E.CurrentMonster)//Player Attacking
             {
-                if (!PlayerHasDamaged) 
-                {
-                    RemainingHp = WhichMonster.HP - Damage;
-                    if (RemainingHp <= 0) { WhichMonster.HP = 0; }
-                    else { WhichMonster.HP -= Damage; }
-                    
-                }
+                if (!PlayerHasDamaged) { Damaging(WhichMonster, Damage); }
                 PlayerHasDamaged = true;
             }
             if(WhichMonster == P.CurrentMonster)//Enemy Attacking
             {
-                if (!EnemyHasDamaged) 
-                {
-                    RemainingHp = WhichMonster.HP - Damage;
-                    if (RemainingHp <= 0) { WhichMonster.HP = 0; }
-                    else { WhichMonster.HP -= Damage; }
-                }
+                if (!EnemyHasDamaged) { Damaging(WhichMonster, Damage); }
                 EnemyHasDamaged = true;
             }
+        }
+
+        void Damaging(Creature WhichMonster, int Damage)
+        {
+            RemainingHp = WhichMonster.HP - Damage;
+            if (RemainingHp <= 0)
+            {
+                WhichMonster.HP = 0;
+                WhichMonster.Dead = true;
+            }
+            else { WhichMonster.HP -= Damage; }
         }
 
         int Decision;
@@ -267,15 +312,17 @@ namespace BattleMonsters
         }
 
         bool LostMonster;
-        public bool CheckMonsterStatus()
+        public bool CheckMonsterStatus(Character WhichCharacter)
         {
+
             LostMonster = false;
-            if(P.CurrentMonster.HP <= 0)
+            if (WhichCharacter.CurrentMonster.HP <= 0)
             {
                 LostMonster = true;
-                GamePrintout.TxtPrintOut += $"\n{P.CurrentMonster.Name}'s Hp hit 0\nThey can no longer Battle";
-                P.Team.Remove(P.CurrentMonster);
-                P.DeadMonsters.Add(P.CurrentMonster);
+                GamePrintout.TxtPrintOut += $"\n{WhichCharacter.CurrentMonster.Name}'s Hp hit 0\nThey can no longer Battle";
+                WhichCharacter.Team.Remove(WhichCharacter.CurrentMonster);
+                if(WhichCharacter == P) { P.DeadMonsters.Add(P.CurrentMonster); }
+               
             }
             return LostMonster;
         }
@@ -334,43 +381,47 @@ namespace BattleMonsters
 
         #region Coins
 
-        public void CheckCoinsLost()
+        string coinstatus;
+        public string CheckCoinsLost()
         {
             //depends on difficulty
             if (GameDifficulty == GameDifficulty.Easy)
             {
                 P.Coins -= (P.Coins / 3); //Looses a 1/3
-                GamePrintout.TxtPrintOut += "\nYou lost a 1/3 of your Coins";
+                coinstatus = "\nYou lost a 1/3 of your Coins";
             }
             if (GameDifficulty == GameDifficulty.Medium)
             {
                 P.Coins -= ((P.Coins / 3) * 2); //Looses 2/3
-                GamePrintout.TxtPrintOut += "\nYou lost a 2/3 of your Coins";
+                coinstatus = "\nYou lost a 2/3 of your Coins";
             }
             if (GameDifficulty == GameDifficulty.Hard) //Looses all
             {
                 P.Coins -= P.Coins;
-                GamePrintout.TxtPrintOut += "\nYou lost all of your Coins";
+                coinstatus = "\nYou lost all of your Coins";
             }
+            return coinstatus;
         }
 
-        public void CheckCoinsGained()
+        public string CheckCoinsGained()
         {
             //depends on difficulty
             if (GameDifficulty == GameDifficulty.Easy)
             {
                 P.Coins += (E.Coins / 3); // Gains a 1/3 of the Enemies coins
+                coinstatus = $"\nYou gaid {E.Coins / 3} Coins from the Enemy";
             }
             if (GameDifficulty == GameDifficulty.Medium)
             {
                 P.Coins += ((E.Coins / 3) * 2); //Gains 2/3 of the Enemies coins
+                coinstatus = $"\nYou gaid {E.Coins / 2} Coins from the Enemy";
             }
             if (GameDifficulty == GameDifficulty.Hard)
             {
                 P.Coins += E.Coins; // Gains all of Enemies Coins
+                coinstatus = $"\nYou gaid {E.Coins} Coins from the Enemy";
             }
-            GamePrintout.TxtPrintOut += $"\nYou gaid {E.Coins / 3} Coins from the Enemy";
-
+            return coinstatus;
         }
         #endregion
 
@@ -439,12 +490,32 @@ namespace BattleMonsters
             }
             if (input.KeyboardState.WasKeyPressed(Keys.L))
             {
-                
                 LockedIn = true;
                 GamePrintout.TxtPrintOut = $"You have selected {P.CurrentMonster.Name}\nThe Battle will commense!";
+                ButtonGuideTxt = "A: Attack | R: Run";
+                BattleElement = Color.White;
             }
         }
         #endregion
+
+
+        public void Draw(SpriteBatch sb, bool MonsterSwapped)
+        {
+            sb.Draw(P.CurrentMonster.spriteTexture, CPMLoc, BattleElement);
+            sb.Draw(E.CurrentMonster.spriteTexture, CEMLoc, BattleElement);
+
+            if (MonsterSwapped)
+            {
+                sb.DrawString(GamePrintout.font, $"Turn: {Turn}", TurntxtLoc, BattleElement);
+
+                sb.DrawString(GamePrintout.font, ButtonGuideTxt, ButtonGuideLoc, BattleElement);
+
+                sb.DrawString(GamePrintout.font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}/{P.CurrentMonster.HPMax}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
+
+                sb.DrawString(GamePrintout.bigfont, $"Enemy: {E.Name}", E_TextLocation, BattleElement);
+                sb.DrawString(GamePrintout.font, $"{E.CurrentMonster.Name}'s HP: {E.CurrentMonster.HP}/{E.CurrentMonster.HPMax}\n\nStats:\nATK Score: {E.CurrentMonster.ATKScore}\nDEF Score: {E.CurrentMonster.DEFScore}", EM_HPLocation, BattleElement);
+            }
+        }
 
     }
 }

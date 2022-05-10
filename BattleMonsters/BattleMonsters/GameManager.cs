@@ -35,7 +35,7 @@ namespace BattleMonsters
 
         Game g;
         InputHandler input;
-
+        
         public GameMode GameMode { get; set; }
         public GameState GameState { get; set; }
 
@@ -44,15 +44,11 @@ namespace BattleMonsters
 
         public Player P;
         public Enemy E;
-        //public Creature CPM, CEM;
-
-
-        public Vector2 PMLocation, EMLocation;
 
         //Text Draw Locations
-        Vector2 P_TextLocation, PM_HPLocation, E_TextLocation, EM_HPLocation;
-        Vector2 RoundtxtLoc, TurntxtLoc, CointxtLoc;
-        
+        Vector2 RoundtxtLoc, CointxtLoc, P_TextLocation;
+
+
 
         SpriteBatch sb;
 
@@ -98,7 +94,6 @@ namespace BattleMonsters
 
         //TODO: Vecor Values should be bassed off of screen width and height
 
-        int margin = 50;
         protected override void LoadContent()
         {
             sb = new SpriteBatch(this.Game.GraphicsDevice);
@@ -109,22 +104,14 @@ namespace BattleMonsters
 
             AlwaysShow = Color.White;
 
-            PMLocation = new Vector2(margin, g.GraphicsDevice.Viewport.Height - 400);
-            EMLocation = new Vector2((g.GraphicsDevice.Viewport.Width - mm.Starter1Texture.Width) - margin, g.GraphicsDevice.Viewport.Height - 400);
-
             Round = 1;
             
             GameMode = GameMode.PickStarter;
 
             #region Text Draw Set
-            P_TextLocation = new Vector2(20, 20);
-            PM_HPLocation = new Vector2(20, 80);
-            E_TextLocation = new Vector2(g.GraphicsDevice.Viewport.Width - 250, 20);
-            EM_HPLocation = new Vector2(g.GraphicsDevice.Viewport.Width - 250, 80);
-
             RoundtxtLoc = new Vector2((g.GraphicsDevice.Viewport.Width / 2) - 50, 20);
-            TurntxtLoc = new Vector2(RoundtxtLoc.X, (RoundtxtLoc.Y + 50));
             CointxtLoc = new Vector2((g.GraphicsDevice.Viewport.Width - 150), 1025);
+            P_TextLocation = new Vector2(20, 20);
             #endregion
 
 #if TESTING
@@ -173,13 +160,6 @@ namespace BattleMonsters
             base.Update(gameTime);
         }
 
-        public void GetBattleResults()
-        {
-            GamePrintout.TxtPrintOut = CurrentBattle.BattleResults();
-            //CurrentBattle.BattleOver = false;
-            if (CurrentBattle.Won) { Round++; }
-        }
-
         bool BattleStarted;
         #region State Changes
         public void CheckGameMode()
@@ -188,8 +168,9 @@ namespace BattleMonsters
             {
                 case GameMode.PickStarter:
                     mm.PickStarterElement = Color.White;
-                    GamePrintout.TxtPrintOut = "Which Starter would you like to pick?";
-                    if(mm.PickedStarter == true)
+                    if (!mm.PickedStarter) { GamePrintout.TxtPrintOut = "Which Starter would you like to pick?"; }
+                    
+                    if(mm.PickedStarter)
                     {
                         mm.PickStarterElement = Color.Transparent;
                         GameMode = GameMode.OutBattle;
@@ -205,18 +186,25 @@ namespace BattleMonsters
                     
                     BattleElement = Color.White;
                     OutOfBattleElement = Color.Transparent;
-                    ButtonGuideTxt = "A: Attack | R: Run";
 
                     if (CurrentBattle.BattleOver == true)
                     {
                         GameMode = GameMode.OutBattle;
                         GamePrintout.TxtPrintOut = CurrentBattle.BattleResults();
+                        CurrentBattle.BattleElement = Color.Transparent;
+
+                        if (CurrentBattle.Won)
+                        {
+                            Round++;
+                            CurrentBattle.Won = false;
+                        }
                     }
 
                     break;
                 case GameMode.OutBattle:
                     OutOfBattleElement = Color.White;
                     BattleElement = Color.Transparent;
+                    ButtonGuideTxt = "B: Battle | H: Heal | R: Raffle | T: Manage Team";
                     break;
                 case GameMode.MonsterSwap:
                     BattleElement = Color.White;
@@ -314,6 +302,7 @@ namespace BattleMonsters
         void RandomEnemyMonster()
         {
             E.CurrentMonster = rm.PullFreeMonster();
+            E.Team.Add(E.CurrentMonster);
         }
 
 
@@ -351,13 +340,11 @@ namespace BattleMonsters
         #endregion
         void BattleReady()
         {
-            P.CurrentMonster.Location = PMLocation;
             P.CurrentMonster.GetStats(Round);
-            g.Components.Add(P.CurrentMonster);
+            //g.Components.Add(P.CurrentMonster);
 
-            E.CurrentMonster.Location = EMLocation;
             E.CurrentMonster.GetStats(Round);
-            g.Components.Add(E.CurrentMonster);
+            //g.Components.Add(E.CurrentMonster);
 
         }
 
@@ -479,19 +466,12 @@ namespace BattleMonsters
             #region Mode Draw
             if(GameMode == GameMode.PickStarter) { mm.Draw(sb); }
             if (GameMode == GameMode.OutBattle) { sb.DrawString(GamePrintout.font, ButtonGuideTxt, ButtonGuideLoc, OutOfBattleElement); }
-            if (GameMode == GameMode.InBattle) 
+            if (GameMode == GameMode.InBattle) { CurrentBattle.Draw(sb, true); }
+            if(GameMode == GameMode.MonsterSwap) 
             {
-                sb.DrawString(GamePrintout.font, $"Turn: {CurrentBattle.Turn}", TurntxtLoc, BattleElement);
-
+                CurrentBattle.Draw(sb, false);
                 sb.DrawString(GamePrintout.font, ButtonGuideTxt, ButtonGuideLoc, BattleElement);
-
-                sb.DrawString(GamePrintout.font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}/{P.CurrentMonster.HPMax}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
-
-                sb.DrawString(GamePrintout.bigfont, $"Enemy: {E.Name}", E_TextLocation, BattleElement);
-                sb.DrawString(GamePrintout.font, $"{E.CurrentMonster.Name}'s HP: {E.CurrentMonster.HP}/{E.CurrentMonster.HPMax}\n\nStats:\nATK Score: {E.CurrentMonster.ATKScore}\nDEF Score: {E.CurrentMonster.DEFScore}", EM_HPLocation, BattleElement);
-
             }
-            if(GameMode == GameMode.MonsterSwap) { sb.DrawString(GamePrintout.font, ButtonGuideTxt, ButtonGuideLoc, BattleElement); }
             if (GameMode == GameMode.Healing) { hm.Draw(sb); }
             if (GameMode == GameMode.Raffel) 
             { 

@@ -97,10 +97,5 @@ namespace BattleMonsters
         public bool ExitRaffle = false;
         public bool GetExitRaffle() { return ExitRaffle; }
 
-
-        public void Draw(SpriteBatch sb)
-        {
-
-        }
     }
 }
