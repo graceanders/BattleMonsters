@@ -18,8 +18,8 @@ namespace BattleMonsters
         int NeedsHeal;
         public bool MonsterHealed;
 
-        public Rectangle MonsterHealedLoc;
-        public Texture2D HealedMonsterSprite, NoMonsterSprite;
+        Rectangle MonsterHealedLoc;
+        Texture2D HealedMonsterSprite, NoMonsterSprite;
 
         public Color HealElement;
 

@@ -49,7 +49,6 @@ namespace BattleMonsters
         Vector2 RoundtxtLoc, CointxtLoc, P_TextLocation;
 
 
-
         SpriteBatch sb;
 
         Color OutOfBattleElement, BattleElement, AlwaysShow;
@@ -151,13 +150,17 @@ namespace BattleMonsters
         {
             CheckGameMode();
             CheckGameState();
-            CheckGameDifficulty();
             if(CurrentBattle != null) { CurrentBattle.CheckBattleState(); }
             UpdateGameInfoTxt();
 
             HandleInput(gameTime);
 
             base.Update(gameTime);
+        }
+
+        void Replay()
+        {
+            LoadContent();
         }
 
         bool BattleStarted;
@@ -197,7 +200,9 @@ namespace BattleMonsters
 
                         if (CurrentBattle.Won)
                         {
-                            Round++;
+                            if(Round + 1 != 7) { Round++; }
+                            else { GameState = GameState.Won; }
+                            
                             CurrentBattle.Won = false;
                         }
                     }
@@ -241,24 +246,12 @@ namespace BattleMonsters
             switch (this.GameState)
             {
                 case GameState.Won:
+                    GamePrintout.TxtPrintOut = "You have defeated all 6 Rounds of Enemies and have won the game!\nHit R to Replay";
                     break;
                 case GameState.Playing:
                     break;
                 case GameState.Lost:
-                    break;
-            }
-        }
-
-        public void CheckGameDifficulty()
-        {
-            //How dose this change the game / dose it?
-            switch (this.GameDifficulty)
-            {
-                case GameDifficulty.Easy:
-                    break;
-                case GameDifficulty.Medium:
-                    break;
-                case GameDifficulty.Hard:
+                    GamePrintout.TxtPrintOut = $"All of your Monsters {P.AllMonsters.Count} have fallen...\nYou do not have enough to heal them\nYou have Lost\nHit R to Replay";
                     break;
             }
         }
@@ -401,6 +394,14 @@ namespace BattleMonsters
             if(GameMode == GameMode.Raffel)
             {
                 rm.RaffleInput();
+            }
+
+            if(GameState != GameState.Playing)
+            {
+                if (input.KeyboardState.WasKeyPressed(Keys.R))
+                {
+                    Replay();
+                }
             }
         }
 

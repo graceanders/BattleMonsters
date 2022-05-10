@@ -193,7 +193,7 @@ namespace BattleMonsters
      
         public void EnemyTurn()
         {
-            if (!E.CurrentMonster.Dead && !E.CurrentMonster.Ran)
+            if (!E.CurrentMonster.Dead)
             {
                 if (!CheckProbablilityOfLoss())
                 {
@@ -247,7 +247,6 @@ namespace BattleMonsters
             {
                 MoveMade = false;
                 TurnOver = false;
-                if (E.CurrentMonster.Ran) { }
                 GamePrintout.TxtPrintOut += $"\n{E.Name} is still standing\nWhat's your next move?";
 
             }
@@ -352,7 +351,6 @@ namespace BattleMonsters
         {
             if (WhichCharacter == E)
             {
-                WhichCharacter.CurrentMonster.Ran = true;
                 PlayerDid = false;
                 EnemyMonsterAbandoned();
 
@@ -360,7 +358,6 @@ namespace BattleMonsters
             if (WhichCharacter == P)
             {
                 GamePrintout.TxtPrintOut += $"\nYou sucessfully Ran";
-                WhichCharacter.CurrentMonster.Ran = true;
                 PlayerDid = true;
                 BattleState = BattleState.Forfit;
             }
