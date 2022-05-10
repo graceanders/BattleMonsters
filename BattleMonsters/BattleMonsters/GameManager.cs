@@ -108,6 +108,8 @@ namespace BattleMonsters
             
             GameMode = GameMode.PickStarter;
 
+            GameLost = false;
+
             #region Text Draw Set
             RoundtxtLoc = new Vector2((g.GraphicsDevice.Viewport.Width / 2) - 50, 20);
             CointxtLoc = new Vector2((g.GraphicsDevice.Viewport.Width - 150), 1025);
@@ -124,7 +126,7 @@ namespace BattleMonsters
 
         void SetUpTestingValues()
         {
-            P.Coins = 100;
+            P.Coins = 1;
             Round = 1;
 
             //Healing
@@ -220,7 +222,6 @@ namespace BattleMonsters
                     ButtonGuideTxt = "B: Battle | H: Heal | R: Raffle | T: Manage Team";
                     break;
                 case GameMode.MonsterSwap:
-                    P.CurrentMonster = P.Team[0];
                     BattleElement = Color.White;
                     OutOfBattleElement = Color.Transparent;
                     ButtonGuideTxt = "L: Lock in Monster 1: Swap to First | 2: Swap to Second | 3: Swap to Third";
@@ -259,54 +260,42 @@ namespace BattleMonsters
                     GamePrintout.TxtPrintOut = "You have defeated all 6 Rounds of Enemies and have won the game!\nHit R to Replay";
                     break;
                 case GameState.Playing:
+                    if (CheckIfLost()) { GameState = GameState.Lost; }
                     break;
                 case GameState.Lost:
-                    GamePrintout.TxtPrintOut = $"All of your Monsters {P.AllMonsters.Count} have fallen...\nYou do not have enough to heal them\nYou have Lost\nHit R to Replay";
+                    GamePrintout.TxtPrintOut = $"All of your Monsters have fallen...\nYou do not have enough to heal them\nYou have Lost\nHit R to Replay";
                     break;
             }
+        }
+
+        bool GameLost;
+        bool CheckIfLost()
+        {
+            GameLost = false;
+            if (P.Team.Count == 0 && P.Coins < hm.HealCost) { GameLost = true; }
+            return GameLost;
         }
         #endregion
 
         public void WhichBattle()
         {
             BattleStarted = true;
-            if (Round == 1)
-            {
-                E.CalculateLevelAndCoins(Round);
-                CurrentBattle = new BattleManager(g, P, E);
-            }
-            if (Round == 2)
-            {
-                RandomEnemyMonster();
-                E.CalculateLevelAndCoins(Round);
-                CurrentBattle = new BattleManager(g, P, E);
-            }
-            if (Round == 3)
-            {
-                RandomEnemyMonster();
-                E.CalculateLevelAndCoins(Round);
-                CurrentBattle = new BattleManager(g, P, E);
-            }
-            if (Round == 4)
-            {
-                RandomEnemyMonster();
-                E.CalculateLevelAndCoins(Round);
-                CurrentBattle = new BattleManager(g, P, E);
-            }
-            if (Round == 5)
-            {
-                RandomEnemyMonster();
-                E.CalculateLevelAndCoins(Round);
-                CurrentBattle = new BattleManager(g, P, E);
-            }
-            if (Round == 6)
-            {
-                RandomEnemyMonster();
-                E.CalculateLevelAndCoins(Round);
-                CurrentBattle = new BattleManager(g, P, E);
-            }
+            if (Round == 1) { NewBattle(); }
+            if (Round == 2) { NewBattle(); }
+            if (Round == 3) { NewBattle(); }
+            if (Round == 4) { NewBattle(); }
+            if (Round == 5) { NewBattle(); }
+            if (Round == 6) { NewBattle(); }
 
             CurrentBattle.Turn = 1;
+        }
+
+        void NewBattle()
+        {
+            if(Round != 1) { RandomEnemyMonster(); }
+            E.CalculateLevelAndCoins(Round);
+            P.CurrentMonster = P.Team[0];
+            CurrentBattle = new BattleManager(g, P, E);
         }
 
         void RandomEnemyMonster()
@@ -374,6 +363,7 @@ namespace BattleMonsters
                 }
                 if (input.KeyboardState.WasKeyPressed(Keys.R))
                 {
+                    GamePrintout.TxtPrintOut = "Welcome Back to Battle Monsters";
                     rm = new RaffleManager(g, P, mm, Round);
                     rm.PullFromRaffel = false;
                     rm.ExitRaffle = false;

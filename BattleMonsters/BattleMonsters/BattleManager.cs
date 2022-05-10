@@ -112,7 +112,8 @@ namespace BattleMonsters
 
         string results;
         public string BattleResults() 
-        { 
+        {
+            LockedIn = false;
             if(BattleState == BattleState.Won)
             {
                 results = $"You defeated Enemy {E.Name}\nYou can now progress to the next Round!";
@@ -386,8 +387,12 @@ namespace BattleMonsters
 
             if (PlayerCombinedHP <= 0)
             {
-                GamePrintout.TxtPrintOut += "\nAll of your Monsters are a 0 HP";
-                this.BattleState = BattleState.Lost;
+                if (this.BattleState != BattleState.Forfit)
+                {
+                    GamePrintout.TxtPrintOut += "\nAll of your Monsters are a 0 HP";
+                    this.BattleState = BattleState.Lost;
+                }
+                    
             }
             if (EnemyCombinedHP <= 0)
             {

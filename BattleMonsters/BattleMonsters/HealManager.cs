@@ -45,7 +45,7 @@ namespace BattleMonsters
 
         #region Healing
 
-        int HealCost = 10;
+        public int HealCost = 10;
         
         Creature HealedMonster;
         
