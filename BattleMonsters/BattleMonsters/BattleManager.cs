@@ -507,7 +507,7 @@ namespace BattleMonsters
                 }
                 else
                 {
-                    qP.CurrentMonster = P.Team[1];
+                    P.CurrentMonster = P.Team[1];
                     GamePrintout.TxtPrintOut = "You have Swapped to your 2st Monster!\nLock in to begin!";
                 }
             }
