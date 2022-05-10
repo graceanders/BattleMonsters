@@ -60,10 +60,18 @@ namespace BattleMonsters
             this.BattleState = BattleState.Playing;
             BattleElement = Color.White;
 
-            LoadContent();
+            LoadBattleEvelemts();
         }
 
         protected override void LoadContent()
+        {
+            LoadBattleEvelemts();
+            P.CurrentMonster = P.Team[0];
+
+            base.LoadContent();
+        }
+
+        void LoadBattleEvelemts()
         {
             PMLocation = new Vector2(margin, game.GraphicsDevice.Viewport.Height - 400);
             EMLocation = new Vector2((game.GraphicsDevice.Viewport.Width - E.CurrentMonster.spriteTexture.Width) - margin, game.GraphicsDevice.Viewport.Height - 400);
@@ -71,15 +79,13 @@ namespace BattleMonsters
             CPMLoc = new Rectangle((int)PMLocation.X, (int)PMLocation.Y, 350, 350);
             CEMLoc = new Rectangle((int)EMLocation.X, (int)EMLocation.Y, 350, 350);
 
-            TurntxtLoc = new Vector2(game.GraphicsDevice.Viewport.Width/ 2 - 25, 70);
+            TurntxtLoc = new Vector2(game.GraphicsDevice.Viewport.Width / 2 - 25, 70);
 
             PM_HPLocation = new Vector2(20, 80);
             E_TextLocation = new Vector2(game.GraphicsDevice.Viewport.Width - 250, 20);
             EM_HPLocation = new Vector2(game.GraphicsDevice.Viewport.Width - 250, 80);
 
             ButtonGuideLoc = new Vector2(20, 1025);
-
-            base.LoadContent();
         }
 
 
@@ -501,7 +507,7 @@ namespace BattleMonsters
                 }
                 else
                 {
-                    P.CurrentMonster = P.Team[1];
+                    qP.CurrentMonster = P.Team[1];
                     GamePrintout.TxtPrintOut = "You have Swapped to your 2st Monster!\nLock in to begin!";
                 }
             }
@@ -533,7 +539,7 @@ namespace BattleMonsters
 
         public void Draw(SpriteBatch sb, bool MonsterSwapped)
         {
-            sb.Draw(P.CurrentMonster.spriteTexture, CPMLoc, BattleElement);
+            sb.Draw(P.CurrentMonster.spriteTexture, CPMLoc, Color.White);
             sb.Draw(E.CurrentMonster.spriteTexture, CEMLoc, BattleElement);
             sb.DrawString(GamePrintout.font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}/{P.CurrentMonster.HPMax}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
 

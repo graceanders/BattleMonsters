@@ -96,6 +96,12 @@ namespace BattleMonsters
 
         protected override void LoadContent()
         {
+            LoadGameElements();
+            base.LoadContent();
+        }
+
+        void LoadGameElements()
+        {
             sb = new SpriteBatch(this.Game.GraphicsDevice);
             GamePrintout.font = this.Game.Content.Load<SpriteFont>("Font");
             GamePrintout.bigfont = this.Game.Content.Load<SpriteFont>("BigFont");
@@ -105,7 +111,7 @@ namespace BattleMonsters
             AlwaysShow = Color.White;
 
             Round = 1;
-            
+
             GameMode = GameMode.PickStarter;
 
             GameLost = false;
@@ -121,7 +127,6 @@ namespace BattleMonsters
 #endif
             ButtonGuideTxt = "B: Battle | H: Heal | R: Raffle | T: Manage Team";
             ButtonGuideLoc = new Vector2(20, 1025);
-            base.LoadContent();
         }
 
         void SetUpTestingValues()
@@ -167,10 +172,8 @@ namespace BattleMonsters
 
         void Replay()
         {
-            LoadContent();
-            GameMode = GameMode.PickStarter;
+            LoadGameElements();
             mm.PickStarterElement = Color.White;
-            
         }
 
         bool BattleStarted;
@@ -296,7 +299,7 @@ namespace BattleMonsters
         {
             if(Round != 1) { RandomEnemyMonster(); }
             E.CalculateLevelAndCoins(Round);
-            P.CurrentMonster = P.Team[0];
+            //P.CurrentMonster = P.Team[0];
             CurrentBattle = new BattleManager(g, P, E);
         }
 

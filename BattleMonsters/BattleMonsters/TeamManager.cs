@@ -41,10 +41,17 @@ namespace BattleMonsters
             g = game;
             mm = MM;
 
-            LoadContent();
+            LoadTeamElements();
         }
 
         protected override void LoadContent()
+        {
+            LoadTeamElements();
+
+            base.LoadContent();
+        }
+
+        void LoadTeamElements()
         {
             ButtonGuideTxt = "L: Lock in Monster | ->: Next Monster | E: Exit";
             ButtonGuideLoc = new Vector2(20, g.GraphicsDevice.Viewport.Height - 50);
@@ -53,11 +60,9 @@ namespace BattleMonsters
 
             WhichAllMonster = WhichTeamMember = 0;
             WhichTeamMember = 0;
-            if(P.Team.Count != 0) { TeamEditSprite = P.Team[0].spriteTexture; }
+            if (P.Team.Count != 0) { TeamEditSprite = P.Team[0].spriteTexture; }
             else { TeamEditSprite = P.AllMonsters[0].spriteTexture; }
-
-            base.LoadContent();
-        }
+        } 
 
         bool Manageable;
         bool StartInfoDisplayed = false;
