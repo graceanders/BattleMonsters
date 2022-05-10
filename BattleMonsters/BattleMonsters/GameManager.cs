@@ -169,6 +169,8 @@ namespace BattleMonsters
         {
             LoadContent();
             GameMode = GameMode.PickStarter;
+            mm.PickStarterElement = Color.White;
+            
         }
 
         bool BattleStarted;
@@ -363,7 +365,6 @@ namespace BattleMonsters
                 }
                 if (input.KeyboardState.WasKeyPressed(Keys.R))
                 {
-                    GamePrintout.TxtPrintOut = "Welcome Back to Battle Monsters";
                     rm = new RaffleManager(g, P, mm, Round);
                     rm.PullFromRaffel = false;
                     rm.ExitRaffle = false;
@@ -402,6 +403,7 @@ namespace BattleMonsters
             {
                 if (input.KeyboardState.WasKeyPressed(Keys.R))
                 {
+                    GamePrintout.TxtPrintOut = "Welcome Back to Battle Monsters";
                     Replay();
                 }
             }

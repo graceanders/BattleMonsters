@@ -189,6 +189,11 @@ namespace BattleMonsters
 
             DamageMonster(E.CurrentMonster, (int)Damage); ;
             GamePrintout.TxtPrintOut += $"\n{P.CurrentMonster.Name} Damaged {E.CurrentMonster.Name} for {(int)Damage} HP points\n{E.CurrentMonster.Name}'s HP is now at {E.CurrentMonster.HP}";
+            if(E.CurrentMonster.HP == 0) { 
+                BattleState = BattleState.Won;
+                TurnOver = true;
+            }
+
         }
 
      
