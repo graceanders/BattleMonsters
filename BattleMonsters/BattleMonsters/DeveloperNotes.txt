@@ -1,0 +1,24 @@
+﻿Techincal Debt
+many properties are still public when they do not need to be
+Many values are set in multiple locations, some are loose threads that were set in an atempt to bug fix that did not solve the problem but were kept
+
+Design Decisions:
+
+Swapping, to make the battle easier to code I only allow the player to Swap at the begining anf not at the middle, due to limited time
+ATKScore and DEFScore can sway the fight slightly but I did not get to types and those advantages
+Some Battle specific values are still set/ajusted/handeled within GameManager, this is due to how connected it is to Game functionality, it was not as easy to detach as other elements such as Healig
+Healing swaps through 1 at a time, instead of showing all the monsters that need healing, because it works better with my Keyboard controlled game
+Same for Team Manager, I force then to manage the team in order for easier implimentation and for the sake of not having 20 Key inputs.
+Raffle Manager I kept simple and allowed the player to pull one at a time because I did not feel it had to be more complicated.
+
+I allowed the Character to CalculateCombindedATK, CalculateTeamHP, AddMonsterToTeam since both the Player and Enemy needed to be able to calculate
+
+I added IInteractable to abstact the Button facits since they were elements of nrealy all of the managers but I did not get to adding it to all of them like Raffle Manager due to time
+I added IAttack and IDefend in interfaces because I though that was the best way to add them in, but I feel the character would have simply had those interfaces, 
+but in the fututre if I have NPC or a Character who can not fight the Interfaces will have a better reason
+SO we shall say they are interfaces for scope, and furture add on
+
+Enemy's Monsters will atempt to Run from there Enemy to escape dying, 
+Enemy run and Player run are still the same but naraitivly are different
+
+

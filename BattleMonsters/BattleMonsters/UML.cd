@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="BattleMonsters.BattleManager">
+    <Position X="10.25" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BAChQCiAgECAEgjIAAASFAgACRAwjRoNEJhVBgBhAYY=</HashCode>
+      <FileName>BattleManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BattleMonsters.Character">
+    <Position X="3.75" Y="3.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACcQAAAEAAAAJEAAAECAAAAA=</HashCode>
+      <FileName>Character.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMonsters.Creature">
+    <Position X="0.5" Y="10" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACQEAAAAAAABCAAEAQFUIAAEAFAAAEACgABAAA=</HashCode>
+      <FileName>Creature.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BattleMonsters.Enemy">
+    <Position X="3.75" Y="10.5" Width="2.5" />
+    <InheritanceLine Type="BattleMonsters.Character" ManuallyRouted="true">
+      <Path>
+        <Point X="5.125" Y="6.536" />
+        <Point X="5.125" Y="6.84" />
+        <Point X="6.692" Y="6.84" />
+        <Point X="6.692" Y="10.26" />
+        <Point X="5" Y="10.26" />
+        <Point X="5" Y="10.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAEAQAAAAAAAA=</HashCode>
+      <FileName>Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMonsters.Game1">
+    <Position X="0.5" Y="3.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAgAAAA0AAAAIAAAAAAAAAABACAIAgAAAAAAQ=</HashCode>
+      <FileName>Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMonsters.GamePrintout">
+    <Position X="0.5" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAQAAAAAg=</HashCode>
+      <FileName>GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMonsters.GameManager" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QSQoACCAgCCDCgFCgQAABigAAEChoBAIAzAQAgNBIAY=</HashCode>
+      <FileName>GameManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="BattleMonsters.HealManager">
+    <Position X="19" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAACBAACQIAgCAAAAGAAAQARAAgBAIAAQAAAhAAAw=</HashCode>
+      <FileName>HealManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BattleMonsters.MonsterManager">
+    <Position X="16.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>CABIBCAAQAEAA6AFIIAEIAABhRJwoBAIEAAQAhBAklQ=</HashCode>
+      <FileName>MonsterManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BattleMonsters.Player">
+    <Position X="3.75" Y="7" Width="2.75" />
+    <InheritanceLine Type="BattleMonsters.Character" FixedFromPoint="true">
+      <Path>
+        <Point X="5.125" Y="6.536" />
+        <Point X="5.125" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAQCAAAAAgAEAAAkAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMonsters.RaffleManager">
+    <Position X="19" Y="9.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAQAAAABAAAIECAAAAAABBAAICABAQQEQAAIJQAAE=</HashCode>
+      <FileName>RaffleManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleMonsters.TeamManager">
+    <Position X="13.25" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACEQAQAAUgHAAAQBABBSAAAgwFQIEIAAAADIAAQ=</HashCode>
+      <FileName>TeamManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="BattleMonsters.IAttack">
+    <Position X="22.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>IAttack.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="BattleMonsters.IDefend">
+    <Position X="22.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAgAAAAA=</HashCode>
+      <FileName>IDefend.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="BattleMonsters.IInteractable">
+    <Position X="22.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IInteractable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="BattleMonsters.BattleState" Collapsed="true">
+    <Position X="22.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAACAAAAAAAAAAAAAAAAIAAAQAAAAABAAAAAAAAA=</HashCode>
+      <FileName>BattleManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BattleMonsters.GameMode">
+    <Position X="22.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAIBCgAAAAAAAAAAAAAQAAAAAAAAAAgAAA=</HashCode>
+      <FileName>GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BattleMonsters.GameState">
+    <Position X="22.25" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BattleMonsters.GameDifficulty">
+    <Position X="22.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkAAA=</HashCode>
+      <FileName>GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -126,7 +126,7 @@ namespace BattleMonsters
 
         void SetUpTestingValues()
         {
-            P.Coins = 1;
+            P.Coins = 100;
             Round = 1;
 
             //Healing
