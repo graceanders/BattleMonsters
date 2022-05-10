@@ -136,6 +136,9 @@ namespace BattleMonsters
             HealableMonster.GetStats(Round);
             P.DeadMonsters.Add(HealableMonster);
 
+            //Team Manage
+            P.AllMonsters.Add(mm.Monsters[9]);
+
             //Full Team
             Creature AddToTeam;
             AddToTeam = mm.WaterJelly;

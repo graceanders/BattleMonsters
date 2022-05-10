@@ -46,64 +46,73 @@ namespace BattleMonsters
 
         protected override void LoadContent()
         {
-            ButtonGuideTxt = "L: Lock in Monster | R: Remove Monster | ->: Next Monster | E: Exit";
+            ButtonGuideTxt = "L: Lock in Monster | ->: Next Monster | E: Exit";
             ButtonGuideLoc = new Vector2(20, g.GraphicsDevice.Viewport.Height - 50);
 
             TeamEditLoc = new Rectangle(g.GraphicsDevice.Viewport.Width / 4, 100, 250, 250);
 
             WhichAllMonster = WhichTeamMember = 0;
+            WhichTeamMember = 0;
             TeamEditSprite = P.Team[0].spriteTexture;
 
             base.LoadContent();
         }
 
         bool Manageable;
+        bool StartInfoDisplayed = false;
         public void ManageTeam()
         {
-            GamePrintout.TxtPrintOut = "Welcom to the Team Manager!";
-
-            if (P.AllMonsters.Count != 0) 
-            { 
-                GamePrintout.TxtPrintOut += "\nWhen you are happy with a monster hit L to lock in";
-                WhichTeamMember = 0;
-                TeamEditSprite = P.Team[0].spriteTexture;
-            }
-            else 
+            if (!StartInfoDisplayed)
             {
-                GamePrintout.TxtPrintOut += "\nYou don't have any extra Monsters and cannot manage your Team\nCome back when you have more Monsters";
-                Manageable = false; 
+                GamePrintout.TxtPrintOut = "Welcome to the Team Manager!";
+
+                if (P.AllMonsters.Count != 0)
+                {
+                    GamePrintout.TxtPrintOut += "\nWhen you are happy with a monster hit L to lock in";
+                    Manageable = true;
+                }
+                else
+                {
+                    GamePrintout.TxtPrintOut += "\nYou don't have any extra Monsters and cannot manage your Team\nCome back when you have more Monsters";
+                    Manageable = false;
+                }
             }
             
         }
 
         int TeamBounds, AllMonsterBounds;
         Creature ReplacedMonster;
+
+        bool Swapping = false;
         public void TeamManageInput()
         {
             if (input.KeyboardState.WasKeyPressed(Keys.L))
             {
                 if (Manageable)
                 {
+                    StartInfoDisplayed = true;
                     SaveReplacedMonster();
 
                     LockMonsterIn();
 
-                    GamePrintout.TxtPrintOut = $"{ReplacedMonster.Name} has been swapped for {P.AllMonsters[WhichAllMonster].Name}\n{ReplacedMonster.Name} has been added to your other Monsters";
+                    GamePrintout.TxtPrintOut = $"{ReplacedMonster.Name} has been swapped for {P.Team[WhichTeamMember].Name}\n{ReplacedMonster.Name} has been added to your other Monsters\n\nNow Swap for the next monster!";
 
                     NextTeamMember();
                 }
 
             }
-            if (input.KeyboardState.WasKeyPressed(Keys.R))
-            {
-                if (Manageable) { RemoveCurrentMonster(); }
-            }
             if (input.KeyboardState.WasKeyPressed(Keys.Right))
             {
-                if (Manageable) { NextMonster(); }
+                StartInfoDisplayed = true;
+                Swapping = true;
+                if (Manageable) 
+                {
+                    NextMonster(); 
+                }
             }
             if (input.KeyboardState.WasKeyPressed(Keys.E))
             {
+                StartInfoDisplayed = true;
                 ExitTeamManager = true;
             }
         }
@@ -120,42 +129,51 @@ namespace BattleMonsters
 
         void LockMonsterIn()
         {
-            P.Team[WhichTeamMember] = P.AllMonsters[WhichAllMonster];
-            P.AllMonsters.Add(ReplacedMonster);
-            P.CurrentMonster = P.Team[0];
+            if (Swapping)
+            {
+                P.Team[WhichTeamMember] = P.AllMonsters[WhichAllMonster];
+                P.AllMonsters.Remove(P.AllMonsters[WhichAllMonster]);
+                P.AllMonsters.Add(ReplacedMonster);
+                P.CurrentMonster = P.Team[0];
+            }
+            else
+            {
+                GamePrintout.TxtPrintOut += "You did not change this Monster";
+            }
+
+            Swapping = false;
+            
         }
 
         void NextTeamMember()
         {
-            TeamBounds = P.Team.Count - 1;
-            if (WhichTeamMember > TeamBounds) { WhichTeamMember = 0; }
             WhichTeamMember++;
+            TeamBounds = P.Team.Count - 1;
+            if (WhichTeamMember > TeamBounds) 
+            { 
+                WhichTeamMember = 0;
+                GamePrintout.TxtPrintOut += "\nAll of your Team has been Locked in\nE: Exit";
+            }
+            
             TeamEditSprite = P.Team[WhichTeamMember].spriteTexture;
         }
         #endregion
 
-        void RemoveCurrentMonster()
-        {
-            P.Team.Remove(P.Team[WhichTeamMember]);
-            GamePrintout.TxtPrintOut = $"You Removed {P.Team[WhichTeamMember].Name} from your Team";
-            P.AllMonsters.Add(P.Team[WhichTeamMember]);
-        }
-
         void NextMonster()
         {
-            GamePrintout.TxtPrintOut += CompareStats();
-
-            TeamEditSprite = P.AllMonsters[WhichAllMonster].spriteTexture;
+            WhichAllMonster++;
             AllMonsterBounds = P.AllMonsters.Count - 1;
             if (WhichAllMonster > AllMonsterBounds) { WhichAllMonster = 0; }
-            WhichAllMonster++;
+            GamePrintout.TxtPrintOut = $"Swap Monster with {P.AllMonsters[WhichAllMonster].Name}?\n";
+            TeamEditSprite = P.AllMonsters[WhichAllMonster].spriteTexture;
+            GamePrintout.TxtPrintOut += CompareStats();
         }
 
         string stats;
         string CompareStats()
         {
-            stats = $"\nHP: {P.Team[WhichTeamMember].HP}/{P.Team[WhichTeamMember].HPMax} | ATK: {P.Team[WhichTeamMember].ATKScore} | DEF: {P.Team[WhichTeamMember].DEFScore}\n";
-            stats += $"HP: {P.AllMonsters[WhichAllMonster].HP}/{P.AllMonsters[WhichAllMonster].HPMax} | ATK: {P.AllMonsters[WhichAllMonster].ATKScore} | DEF: {P.AllMonsters[WhichAllMonster].DEFScore}\n";
+            stats = $"\nCurrent Stats\nHP: {P.Team[WhichTeamMember].HP}/{P.Team[WhichTeamMember].HPMax} | ATK: {P.Team[WhichTeamMember].ATKScore} | DEF: {P.Team[WhichTeamMember].DEFScore}\n";
+            stats += $"{P.AllMonsters[WhichAllMonster].Name}'s Stats\nHP: {P.AllMonsters[WhichAllMonster].HP}/{P.AllMonsters[WhichAllMonster].HPMax} | ATK: {P.AllMonsters[WhichAllMonster].ATKScore} | DEF: {P.AllMonsters[WhichAllMonster].DEFScore}\n";
             return stats;
         }
 

@@ -83,7 +83,7 @@ namespace BattleMonsters
             P.DeadMonsters.Remove(c);//Remove the first monster from DeadMonsters
             HealedMonster = c;//Set it locally
             P.AllMonsters.Add(HealedMonster);//Add to All Monsters
-            GamePrintout.TxtPrintOut = $"{HealedMonster.Name} has been Healed!\nThey are now back in your colection";
+            GamePrintout.TxtPrintOut = $"{HealedMonster.Name} has been Healed!\nThey are now back in your colection\nE: Exit";
             MonsterHealed = true;
         }
 
