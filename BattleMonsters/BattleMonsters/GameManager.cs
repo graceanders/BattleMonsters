@@ -58,6 +58,7 @@ namespace BattleMonsters
         MonsterManager mm;
         HealManager hm;
         RaffleManager rm;
+        TeamManager tm;
 
         BattleManager CurrentBattle;
 
@@ -236,7 +237,10 @@ namespace BattleMonsters
                     }
                     break;
                 case GameMode.ManageTeam:
+                    tm.TeamManageElement = Color.White;
+                    tm.ManageTeam();
 
+                    if (tm.GetExitTeamManager()) { ExitMode(tm.TeamManageElement); }
                     break;
             }
         }
@@ -372,6 +376,7 @@ namespace BattleMonsters
                 if (input.KeyboardState.WasKeyPressed(Keys.T))
                 {
                     //Manage team
+                    tm = new TeamManager(g, P);
                     GamePrintout.TxtPrintOut = "Lets manage your Team!";
                     GameMode = GameMode.ManageTeam;
                 }
@@ -395,6 +400,7 @@ namespace BattleMonsters
             {
                 rm.RaffleInput();
             }
+            if(GameMode == GameMode.ManageTeam) { tm.TeamManageInput(); }
 
             if(GameState != GameState.Playing)
             {
@@ -473,6 +479,7 @@ namespace BattleMonsters
                 else { sb.Draw(rm.PulledMonsterSprite, rm.MonsterPulledLoc, rm.RaffleElement); }
 
             }
+            if(GameMode == GameMode.ManageTeam) { tm.Draw(sb); }
             #endregion
 
             sb.End();

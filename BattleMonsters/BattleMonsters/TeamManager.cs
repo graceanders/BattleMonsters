@@ -60,7 +60,7 @@ namespace BattleMonsters
 
         int TeamBounds, AllMonsterBounds;
         Creature ReplacedMonster;
-        public void TeamManage()
+        public void TeamManageInput()
         {
             if (input.KeyboardState.WasKeyPressed(Keys.L))
             {
@@ -86,6 +86,8 @@ namespace BattleMonsters
                 ExitTeamManager = true;
             }
         }
+
+        public bool GetExitTeamManager() { return ExitTeamManager; }
 
         #region Lock In
         void SaveReplacedMonster()
