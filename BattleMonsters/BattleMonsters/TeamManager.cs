@@ -30,13 +30,18 @@ namespace BattleMonsters
 
         public Color TeamManageElement;
 
+        MonsterManager mm;
 
-        public TeamManager(Game game, Player p): base(game)
+
+        public TeamManager(Game game, Player p, MonsterManager MM): base(game)
         {
             input = (InputHandler)game.Services.GetService(typeof(IInputHandler));
 
             P = p;
             g = game;
+            mm = MM;
+
+            LoadContent();
         }
 
         protected override void LoadContent()
@@ -47,15 +52,28 @@ namespace BattleMonsters
             TeamEditLoc = new Rectangle(g.GraphicsDevice.Viewport.Width / 4, 100, 250, 250);
 
             WhichAllMonster = WhichTeamMember = 0;
+            TeamEditSprite = P.Team[0].spriteTexture;
 
             base.LoadContent();
         }
 
+        bool Manageable;
         public void ManageTeam()
         {
-            GamePrintout.TxtPrintOut = "Welcom to the Team Manager!\nWhen you are happy with a monster hit L to lock in";
-            WhichTeamMember = 0;
-            TeamEditSprite = P.Team[0].spriteTexture;
+            GamePrintout.TxtPrintOut = "Welcom to the Team Manager!";
+
+            if (P.AllMonsters.Count != 0) 
+            { 
+                GamePrintout.TxtPrintOut += "\nWhen you are happy with a monster hit L to lock in";
+                WhichTeamMember = 0;
+                TeamEditSprite = P.Team[0].spriteTexture;
+            }
+            else 
+            {
+                GamePrintout.TxtPrintOut += "\nYou don't have any extra Monsters and cannot manage your Team\nCome back when you have more Monsters";
+                Manageable = false; 
+            }
+            
         }
 
         int TeamBounds, AllMonsterBounds;
@@ -64,22 +82,25 @@ namespace BattleMonsters
         {
             if (input.KeyboardState.WasKeyPressed(Keys.L))
             {
-                SaveReplacedMonster();
+                if (Manageable)
+                {
+                    SaveReplacedMonster();
 
-                LockMonsterIn();
+                    LockMonsterIn();
 
-                GamePrintout.TxtPrintOut = $"{ReplacedMonster.Name} has been swapped for {P.AllMonsters[WhichAllMonster].Name}\n{ReplacedMonster.Name} has been added to your other Monsters";
+                    GamePrintout.TxtPrintOut = $"{ReplacedMonster.Name} has been swapped for {P.AllMonsters[WhichAllMonster].Name}\n{ReplacedMonster.Name} has been added to your other Monsters";
 
-                NextTeamMember();
+                    NextTeamMember();
+                }
 
             }
             if (input.KeyboardState.WasKeyPressed(Keys.R))
             {
-                RemoveCurrentMonster();
+                if (Manageable) { RemoveCurrentMonster(); }
             }
             if (input.KeyboardState.WasKeyPressed(Keys.Right))
             {
-                NextMonster();
+                if (Manageable) { NextMonster(); }
             }
             if (input.KeyboardState.WasKeyPressed(Keys.E))
             {

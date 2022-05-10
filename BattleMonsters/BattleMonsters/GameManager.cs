@@ -376,7 +376,7 @@ namespace BattleMonsters
                 if (input.KeyboardState.WasKeyPressed(Keys.T))
                 {
                     //Manage team
-                    tm = new TeamManager(g, P);
+                    tm = new TeamManager(g, P, mm);
                     GamePrintout.TxtPrintOut = "Lets manage your Team!";
                     GameMode = GameMode.ManageTeam;
                 }

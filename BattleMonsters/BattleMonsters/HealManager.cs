@@ -32,6 +32,7 @@ namespace BattleMonsters
             P = player;
 
             g = game;
+            WhichMonster = 0;
         }
         protected override void LoadContent()
         {
@@ -89,7 +90,11 @@ namespace BattleMonsters
         int WhichMonster = 0;
         void PickWhichToHeal()
         {
-            if(NeedsHeal == 1) { GamePrintout.TxtPrintOut += $"Only {P.DeadMonsters[WhichMonster].Name} needs healing\n{P.DeadMonsters[WhichMonster].DisplayStats()}"; }
+            if(NeedsHeal == 1) 
+            {
+                HealedMonsterSprite = P.DeadMonsters[0].spriteTexture;
+                GamePrintout.TxtPrintOut += $"Only {P.DeadMonsters[WhichMonster].Name} needs healing\n{P.DeadMonsters[WhichMonster].DisplayStats()}"; 
+            }
             else
             {
                 if (WhichMonster > NeedsHeal - 1) { WhichMonster = 0; }//Cycle Through
@@ -106,6 +111,7 @@ namespace BattleMonsters
             if (input.KeyboardState.WasKeyPressed(Keys.T))
             {
                 Heal(P.DeadMonsters[WhichMonster]);
+                
             }
             if (input.KeyboardState.WasKeyPressed(Keys.Right))
             {

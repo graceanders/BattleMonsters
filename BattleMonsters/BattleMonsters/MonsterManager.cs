@@ -180,7 +180,7 @@ namespace BattleMonsters
             P.CurrentMonster = c;
             P.Team.Add(P.CurrentMonster);
             GamePrintout.TxtPrintOut = $"You have chosen {P.CurrentMonster.Name} as your starter!";
-
+            
             //Enemy is at a type disadvantage
             if (c == FireStarter) { EnemyStarter(EarthStarter); }
             if (c == WaterStarter) { EnemyStarter(FireStarter); }
