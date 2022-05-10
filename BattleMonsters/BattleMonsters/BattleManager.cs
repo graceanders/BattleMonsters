@@ -141,7 +141,7 @@ namespace BattleMonsters
         }
 
         #region Turn
-        bool TurnOver = false;
+        public bool TurnOver = false;
         public void FullTurn(bool Attack)
         {
             MoveMade = true;

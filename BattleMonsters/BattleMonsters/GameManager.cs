@@ -196,7 +196,7 @@ namespace BattleMonsters
                     BattleElement = Color.White;
                     OutOfBattleElement = Color.Transparent;
 
-                    if (CurrentBattle.BattleOver == true)
+                    if (CurrentBattle.BattleOver == true && CurrentBattle.TurnOver == true)
                     {
                         GameMode = GameMode.OutBattle;
                         GamePrintout.TxtPrintOut = CurrentBattle.BattleResults();
