@@ -174,7 +174,9 @@ namespace BattleMonsters
                     {
                         mm.PickStarterElement = Color.Transparent;
                         GameMode = GameMode.OutBattle;
-                        BattleReady();
+
+                        P.CurrentMonster.GetStats(Round);
+                        E.CurrentMonster.GetStats(Round);
                     }
                     break;
                 case GameMode.InBattle:
@@ -273,26 +275,31 @@ namespace BattleMonsters
             if (Round == 2)
             {
                 RandomEnemyMonster();
+                E.CalculateLevelAndCoins();
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 3)
             {
                 RandomEnemyMonster();
+                E.CalculateLevelAndCoins();
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 4)
             {
                 RandomEnemyMonster();
+                E.CalculateLevelAndCoins();
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 5)
             {
                 RandomEnemyMonster();
+                E.CalculateLevelAndCoins();
                 CurrentBattle = new BattleManager(g, P, E);
             }
             if (Round == 6)
             {
                 RandomEnemyMonster();
+                E.CalculateLevelAndCoins();
                 CurrentBattle = new BattleManager(g, P, E);
             }
 
@@ -301,6 +308,7 @@ namespace BattleMonsters
 
         void RandomEnemyMonster()
         {
+            if(rm == null) { rm = new RaffleManager(g, P, mm, Round); }
             E.CurrentMonster = rm.PullFreeMonster();
             E.Team.Add(E.CurrentMonster);
         }
@@ -330,22 +338,6 @@ namespace BattleMonsters
             GameMode = GameMode.OutBattle;
             color = Color.Transparent;
             GamePrintout.TxtPrintOut = "";
-        }
-
-        //TODO: will need testing but I think Raffle is pretty solid!!
-        #region Raffle
-
-        
-
-        #endregion
-        void BattleReady()
-        {
-            P.CurrentMonster.GetStats(Round);
-            //g.Components.Add(P.CurrentMonster);
-
-            E.CurrentMonster.GetStats(Round);
-            //g.Components.Add(E.CurrentMonster);
-
         }
 
         #region Input

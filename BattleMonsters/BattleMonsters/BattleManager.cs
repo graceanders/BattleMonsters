@@ -128,7 +128,7 @@ namespace BattleMonsters
             if (BattleState == BattleState.Forfit)
             {
                 if (PlayerDid) { results = "You ran before defeating the Enemy\nTo progress to the next Round you must defeat the Enemy!"; }
-                if (!PlayerDid) { results = "The Enemy ran before you could defeat them\nTo progress to the next Round you must defeat the Enemy!"; }
+                if (!PlayerDid) { results = "All of the Enemy's Monsters ran before you could defeat them\nTo progress to the next Round you must defeat the Enemy!"; }
             }
 
             return results;
@@ -170,7 +170,7 @@ namespace BattleMonsters
                 
             }
 
-            if(TurnOver == true)
+            if(TurnOver == true && BattleState == BattleState.Playing)
             {
                 CallPause();
                 BattleState = BattleState.Paused;
@@ -193,11 +193,10 @@ namespace BattleMonsters
      
         public void EnemyTurn()
         {
-            if (!E.CurrentMonster.Dead)
+            if (!E.CurrentMonster.Dead && !E.CurrentMonster.Ran)
             {
                 if (!CheckProbablilityOfLoss())
                 {
-                    //OptomizeEnemySwap(); //Potentially build out
                     if (BattleState == BattleState.Playing)
                     {
                         Damage = E.CurrentMonster.Attack(E.CurrentMonster.ATKScore, P.CurrentMonster.DEFScore);
@@ -206,7 +205,8 @@ namespace BattleMonsters
                     }
                 }
             }
-            else { GamePrintout.TxtPrintOut += $"\n{E.Name}'s Monster has been Defeated!"; }
+            if(E.CurrentMonster.Dead)
+            { GamePrintout.TxtPrintOut += $"\n{E.Name}'s Monster has been Defeated!"; }
             
             GamePrintout.TxtPrintOut += "\nTurn Completed";
             TurnOver = true;
@@ -247,10 +247,13 @@ namespace BattleMonsters
             {
                 MoveMade = false;
                 TurnOver = false;
+                if (E.CurrentMonster.Ran) { }
                 GamePrintout.TxtPrintOut += $"\n{E.Name} is still standing\nWhat's your next move?";
 
             }
         }
+
+        
 
         #endregion
         int RemainingHp;
@@ -277,29 +280,6 @@ namespace BattleMonsters
                 WhichMonster.Dead = true;
             }
             else { WhichMonster.HP -= Damage; }
-        }
-
-        int Decision;
-        public bool CheckProbablilityOfLoss()
-        {
-            if(E.Team.Count == 1)
-            {
-                if (P.CurrentMonster.ATKScore > E.CurrentMonster.HP)//if the enemy will lose on the next round
-                {
-                    Decision = WillRun.Next(0, 100);
-                    //Need to have the Enemy not forfit every time
-                    if (Decision > 50)
-                    {
-                        GamePrintout.TxtPrintOut += $"\nThe Enemy is attempting to Run!";
-                        //Attempt run
-                        Run(E);
-                        return true;
-                    }
-
-                }
-            }
-            return false;
-
         }
 
 
@@ -329,34 +309,73 @@ namespace BattleMonsters
 
         #region Run
 
+        int Decision;
+        public bool CheckProbablilityOfLoss()
+        {
+            if (E.Team.Count == 1)
+            {
+                if (P.CurrentMonster.ATKScore > E.CurrentMonster.HP)//if the enemy will lose on the next round
+                {
+                    Decision = WillRun.Next(0, 100);
+                    //Need to have the Enemy not forfit every time
+                    if (Decision > 50)
+                    {
+                        GamePrintout.TxtPrintOut += $"\nThe Enemy is attempting to Run!";
+                        //Attempt run
+                        Run(E);
+                        return true;
+                    }
+
+                }
+            }
+            return false;
+
+        }
+
+
         int RunSucessRate;
         public void Run(Character WhichCharacter)
         {
             RunSucessRate = RunAttempt.Next(100);
-            if (RunSucessRate < 60)
+            if (RunSucessRate <= 60)
             {
                 RunSucess(WhichCharacter);
             }
             else
             {
-                GamePrintout.TxtPrintOut += $"\nThe {WhichCharacter.Name} was unsucesfull in their Run attempt";
+                GamePrintout.TxtPrintOut += $"\nThe {WhichCharacter.CurrentMonster.Name} was unsucesfull in their Run attempt";
             }
             
         }
 
-        public bool RunSucess(Character WhichCharacter)
+        public void RunSucess(Character WhichCharacter)
         {
-            GamePrintout.TxtPrintOut += $"\nThe {WhichCharacter.Name} sucessfully Ran";
-            BattleState = BattleState.Forfit;
             if (WhichCharacter == E)
             {
+                WhichCharacter.CurrentMonster.Ran = true;
                 PlayerDid = false;
+                EnemyMonsterAbandoned();
+
             }
             if (WhichCharacter == P)
             {
+                GamePrintout.TxtPrintOut += $"\nYou sucessfully Ran";
+                WhichCharacter.CurrentMonster.Ran = true;
                 PlayerDid = true;
+                BattleState = BattleState.Forfit;
             }
-            return PlayerDid;
+        }
+
+        //The Enemy dose not run their monsters choose to abondon them to save themselves
+        void EnemyMonsterAbandoned()
+        {
+            GamePrintout.TxtPrintOut += $"\n{E.CurrentMonster.Name} abondomed {E.Name}";
+            E.Team.Remove(E.CurrentMonster);
+            if(E.Team.Count != 0)
+            {
+                E.CurrentMonster = E.Team[0];
+            }
+            else { BattleState = BattleState.Forfit; }
         }
 
         #endregion
@@ -374,8 +393,12 @@ namespace BattleMonsters
             }
             if (EnemyCombinedHP <= 0)
             {
-                GamePrintout.TxtPrintOut += $"\nAll of {E.Name}'s Monsters are a 0 HP";
-                this.BattleState = BattleState.Won;
+                if(this.BattleState != BattleState.Forfit)
+                {
+                    GamePrintout.TxtPrintOut += $"\nAll of {E.Name}'s Monsters are a 0 HP";
+                    this.BattleState = BattleState.Won;
+                }
+                
             }
         }
 
@@ -446,7 +469,8 @@ namespace BattleMonsters
                 if (input.KeyboardState.WasKeyPressed(Keys.Space))
                 {
                     Paused = false;
-                    BattleState = BattleState.Playing;
+                    if(BattleState != BattleState.Forfit) { BattleState = BattleState.Playing; }
+                    
                     TurnCompleted();
                 }
             }
@@ -492,7 +516,7 @@ namespace BattleMonsters
             {
                 LockedIn = true;
                 GamePrintout.TxtPrintOut = $"You have selected {P.CurrentMonster.Name}\nThe Battle will commense!";
-                ButtonGuideTxt = "A: Attack | R: Run";
+                //ButtonGuideTxt = "A: Attack | R: Run";
                 BattleElement = Color.White;
             }
         }
@@ -503,14 +527,14 @@ namespace BattleMonsters
         {
             sb.Draw(P.CurrentMonster.spriteTexture, CPMLoc, BattleElement);
             sb.Draw(E.CurrentMonster.spriteTexture, CEMLoc, BattleElement);
+            sb.DrawString(GamePrintout.font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}/{P.CurrentMonster.HPMax}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
 
             if (MonsterSwapped)
             {
                 sb.DrawString(GamePrintout.font, $"Turn: {Turn}", TurntxtLoc, BattleElement);
 
+                if(ButtonGuideTxt == null) { ButtonGuideTxt= "A: Attack | R: Run"; }
                 sb.DrawString(GamePrintout.font, ButtonGuideTxt, ButtonGuideLoc, BattleElement);
-
-                sb.DrawString(GamePrintout.font, $"{P.CurrentMonster.Name}'s HP: {P.CurrentMonster.HP}/{P.CurrentMonster.HPMax}\n\nStats:\nATK Score: {P.CurrentMonster.ATKScore}\nDEF Score: {P.CurrentMonster.DEFScore}", PM_HPLocation, BattleElement);
 
                 sb.DrawString(GamePrintout.bigfont, $"Enemy: {E.Name}", E_TextLocation, BattleElement);
                 sb.DrawString(GamePrintout.font, $"{E.CurrentMonster.Name}'s HP: {E.CurrentMonster.HP}/{E.CurrentMonster.HPMax}\n\nStats:\nATK Score: {E.CurrentMonster.ATKScore}\nDEF Score: {E.CurrentMonster.DEFScore}", EM_HPLocation, BattleElement);

@@ -20,7 +20,7 @@ namespace BattleMonsters
 
         Random stats;
 
-        public bool Dead;
+        public bool Dead, Ran;
 
         public Creature(Game game) : base(game) { }
 
