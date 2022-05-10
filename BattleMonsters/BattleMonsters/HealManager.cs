@@ -92,6 +92,7 @@ namespace BattleMonsters
         {
             if(NeedsHeal == 1) 
             {
+                WhichMonster = 0;
                 HealedMonsterSprite = P.DeadMonsters[0].spriteTexture;
                 GamePrintout.TxtPrintOut += $"Only {P.DeadMonsters[WhichMonster].Name} needs healing\n{P.DeadMonsters[WhichMonster].DisplayStats()}"; 
             }
